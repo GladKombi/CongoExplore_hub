@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congo Explorer Hub - Accueil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'congo-dark': '#1a2e2a',
+                        'congo-green': '#2d5a4c',
+                        'congo-gold': '#d4a843',
+                        'congo-gold-light': '#f0c96e',
+                        'congo-navy': '#1e3a5f',
+                        'congo-cream': '#f5f0e8',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'bounce-slight': 'bounceSlight 2s infinite',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        bounceSlight: {
+                            '0%, 100%': { transform: 'translateY(-5%)' },
+                            '50%': { transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .story-ring {
+            background: linear-gradient(45deg, #d4a843, #f0c96e, #d4a843);
+            padding: 3px;
+            border-radius: 50%;
+        }
+        .story-ring-seen {
+            background: #e5e7eb;
+            padding: 3px;
+            border-radius: 50%;
+        }
+        .reel-gradient {
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+        }
+        .like-anim {
+            animation: likePop 0.4s ease-out;
+        }
+        @keyframes likePop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .nav-active {
+            position: relative;
+        }
+        .nav-active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: #d4a843;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 flex-shrink-0">
+                    <img src="/mnt/agents/upload/hub2.png" alt="Congo Explorer Hub" class="w-10 h-10 object-contain">
+                    <span class="hidden md:block font-bold text-congo-dark text-lg">Congo Explorer<span class="text-congo-gold">Hub</span></span>
+                </div>
+
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden md:flex flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                        <input type="text" placeholder="Rechercher des publications, événements..." 
+                            class="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-congo-gold/50 transition-all">
+                    </div>
+                </div>
+
+                <!-- Nav Icons -->
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button class="p-2 nav-active text-congo-dark" onclick="switchTab('feed')">
+                        <i data-lucide="home" class="w-6 h-6"></i>
+                    </button>
+                    <button class="p-2 text-gray-400 hover:text-congo-dark transition-colors" onclick="switchTab('explore')">
+                        <i data-lucide="compass" class="w-6 h-6"></i>
+                    </button>
+                    <button class="p-2 text-gray-400 hover:text-congo-dark transition-colors relative" onclick="switchTab('reels')">
+                        <i data-lucide="play-square" class="w-6 h-6"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <button class="p-2 text-gray-400 hover:text-congo-dark transition-colors" onclick="switchTab('messages')">
+                        <i data-lucide="send" class="w-6 h-6"></i>
+                    </button>
+                    <button class="p-2 text-gray-400 hover:text-congo-dark transition-colors relative" onclick="switchTab('notifications')">
+                        <i data-lucide="heart" class="w-6 h-6"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    
+                    <!-- Profile Dropdown -->
+                    <div class="relative ml-2">
+                        <button onclick="toggleProfileMenu()" class="w-8 h-8 rounded-full overflow-hidden border-2 border-congo-gold">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" alt="Profile" class="w-full h-full object-cover">
+                        </button>
+                        <div id="profile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
+                                <i data-lucide="user" class="w-4 h-4"></i> Profil
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
+                                <i data-lucide="bookmark" class="w-4 h-4"></i> Sauvegardes
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
+                                <i data-lucide="settings" class="w-4 h-4"></i> Paramètres
+                            </a>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-50 text-red-500">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="pt-16 max-w-7xl mx-auto">
+        <div class="flex">
+            
+            <!-- Left Sidebar (Desktop) -->
+            <aside class="hidden lg:block w-64 fixed h-screen overflow-y-auto hide-scrollbar pt-8 px-4">
+                <nav class="space-y-2">
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 transition-colors group">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" class="w-7 h-7 rounded-full">
+                        <span class="font-semibold text-sm">Mon Profil</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 transition-colors group">
+                        <div class="w-7 h-7 rounded-full bg-congo-gold/20 flex items-center justify-center">
+                            <i data-lucide="users" class="w-4 h-4 text-congo-gold"></i>
+                        </div>
+                        <span class="font-medium text-sm">Communauté Congo</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 transition-colors group">
+                        <div class="w-7 h-7 rounded-full bg-congo-green/20 flex items-center justify-center">
+                            <i data-lucide="calendar" class="w-4 h-4 text-congo-green"></i>
+                        </div>
+                        <span class="font-medium text-sm">Événements</span>
+                        <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 transition-colors group">
+                        <div class="w-7 h-7 rounded-full bg-congo-navy/20 flex items-center justify-center">
+                            <i data-lucide="video" class="w-4 h-4 text-congo-navy"></i>
+                        </div>
+                        <span class="font-medium text-sm">Reels & Vidéos</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 transition-colors group">
+                        <div class="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center">
+                            <i data-lucide="bookmark" class="w-4 h-4 text-purple-600"></i>
+                        </div>
+                        <span class="font-medium text-sm">Sauvegardes</span>
+                    </a>
+                </nav>
+
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Suggestions</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" class="w-8 h-8 rounded-full">
+                                <div>
+                                    <div class="text-sm font-semibold">Sarah M.</div>
+                                    <div class="text-xs text-gray-500">Journaliste</div>
+                                </div>
+                            </div>
+                            <button class="text-congo-gold text-xs font-semibold hover:text-congo-gold-light">Suivre</button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" class="w-8 h-8 rounded-full">
+                                <div>
+                                    <div class="text-sm font-semibold">Jean K.</div>
+                                    <div class="text-xs text-gray-500">Photographe</div>
+                                </div>
+                            </div>
+                            <button class="text-congo-gold text-xs font-semibold hover:text-congo-gold-light">Suivre</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1 lg:ml-64 lg:mr-80">
+                
+                <!-- Stories Row -->
+                <div class="bg-white border-b border-gray-200 py-4">
+                    <div class="flex space-x-4 overflow-x-auto hide-scrollbar px-4">
+                        <!-- My Story -->
+                        <div class="flex-shrink-0 flex flex-col items-center space-y-1 cursor-pointer group">
+                            <div class="relative">
+                                <div class="story-ring">
+                                    <div class="w-16 h-16 rounded-full overflow-hidden bg-white p-0.5">
+                                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face" class="w-full h-full object-cover rounded-full">
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-0 right-0 w-5 h-5 bg-congo-gold rounded-full border-2 border-white flex items-center justify-center">
+                                    <i data-lucide="plus" class="w-3 h-3 text-white"></i>
+                                </div>
+                            </div>
+                            <span class="text-xs font-medium">Votre story</span>
+                        </div>
+
+                        <!-- Story Items -->
+                        <div class="flex-shrink-0 flex flex-col items-center space-y-1 cursor-pointer group">
+                            <div class="story-ring">
+                                <div class="w-16 h-16 rounded-full overflow-hidden bg-white p-0.5">
+                                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150&h=150&fit=crop&crop=face" class="w-full h-full object-cover rounded-full">
+                                </div>
+                            </div>
+                            <span class="text-xs font-medium">Marie L.</span>
+                        </div>
+                        <div class="flex-shrink-0 flex flex-col items-center space-y-1 cursor-pointer group">
+                            <div class="story-ring">
+                                <div class="w-16 h-16 rounded-full overflow-hidden bg-white p-0.5">
+                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face" class="w-full h-full object-cover rounded-full">
+                                </div>
+                            </div>
+                            <span class="text-xs font-medium">David K.</span>
+                        </div>
+                        <div class="flex-shrink-0 flex flex-col items-center space-y-1 cursor-pointer group">
+                            <div class="story-ring-seen">
+                                <div class="w-16 h-16 rounded-full overflow-hidden bg-white p-0.5">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" class="w-full h-full object-cover rounded-full">
+                                </div>
+                            </div>
+                            <span class="text-xs font-medium text-gray-500">Amina T.</span>
+                        </div>
+                        <div class="flex-shrink-0 flex flex-col items-center space-y-1 cursor-pointer group">
+                            <div class="story-ring">
+                                <div class="w-16 h-16 rounded-full overflow-hidden bg-white p-0.5">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" class="w-full h-full object-cover rounded-full">
+                                </div>
+                            </div>
+                            <span class="text-xs font-medium">Paul M.</span>
+                        </div>
+                        <div class="flex-shrink-0 flex flex-col items-center space-y-1 cursor-pointer group">
+                            <div class="story-ring">
+                                <div class="w-16 h-16 rounded-full overflow-hidden bg-white p-0.5">
+                                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face" class="w-full h-full object-cover rounded-full">
+                                </div>
+                            </div>
+                            <span class="text-xs font-medium">Grace N.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Post -->
+                <div class="bg-white border-b border-gray-200 p-4">
+                    <div class="flex items-center space-x-3">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full">
+                        <div class="flex-1">
+                            <input type="text" placeholder="Quoi de neuf, Congo Explorer ?" 
+                                class="w-full bg-gray-100 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-congo-gold/50 transition-all cursor-pointer hover:bg-gray-200"
+                                onclick="openCreateModal()">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                        <button class="flex items-center space-x-2 text-gray-500 hover:text-congo-green transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-50">
+                            <i data-lucide="image" class="w-5 h-5 text-green-500"></i>
+                            <span class="text-sm font-medium">Photo</span>
+                        </button>
+                        <button class="flex items-center space-x-2 text-gray-500 hover:text-congo-navy transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-50">
+                            <i data-lucide="video" class="w-5 h-5 text-blue-500"></i>
+                            <span class="text-sm font-medium">Vidéo</span>
+                        </button>
+                        <button class="flex items-center space-x-2 text-gray-500 hover:text-congo-gold transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-50">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-red-500"></i>
+                            <span class="text-sm font-medium">Lieu</span>
+                        </button>
+                        <button class="flex items-center space-x-2 text-gray-500 hover:text-purple-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-50">
+                            <i data-lucide="smile" class="w-5 h-5 text-yellow-500"></i>
+                            <span class="text-sm font-medium">Humeur</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reels Section (Horizontal Scroll) -->
+                <div class="bg-white border-b border-gray-200">
+                    <div class="flex items-center justify-between px-4 py-3">
+                        <h3 class="font-bold text-congo-dark flex items-center gap-2">
+                            <i data-lucide="play-square" class="w-5 h-5 text-congo-gold"></i>
+                            Reels Congo
+                        </h3>
+                        <a href="#" class="text-congo-gold text-sm font-semibold hover:underline">Voir tout</a>
+                    </div>
+                    <div class="flex space-x-3 overflow-x-auto hide-scrollbar px-4 pb-4">
+                        <!-- Reel 1 -->
+                        <div class="flex-shrink-0 w-36 h-64 rounded-xl overflow-hidden relative cursor-pointer group">
+                            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=300&h=500&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 reel-gradient"></div>
+                            <div class="absolute top-3 right-3">
+                                <i data-lucide="play" class="w-6 h-6 text-white fill-white"></i>
+                            </div>
+                            <div class="absolute bottom-3 left-3 right-3">
+                                <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=50&h=50&fit=crop&crop=face" class="w-8 h-8 rounded-full border-2 border-white mb-2">
+                                <p class="text-white text-xs font-semibold line-clamp-2">Découverte de Kinshasa by night ✨</p>
+                            </div>
+                        </div>
+                        <!-- Reel 2 -->
+                        <div class="flex-shrink-0 w-36 h-64 rounded-xl overflow-hidden relative cursor-pointer group">
+                            <img src="https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=300&h=500&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 reel-gradient"></div>
+                            <div class="absolute top-3 right-3">
+                                <i data-lucide="play" class="w-6 h-6 text-white fill-white"></i>
+                            </div>
+                            <div class="absolute bottom-3 left-3 right-3">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" class="w-8 h-8 rounded-full border-2 border-white mb-2">
+                                <p class="text-white text-xs font-semibold line-clamp-2">La gastronomie congolaise 🇨🇩</p>
+                            </div>
+                        </div>
+                        <!-- Reel 3 -->
+                        <div class="flex-shrink-0 w-36 h-64 rounded-xl overflow-hidden relative cursor-pointer group">
+                            <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=300&h=500&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 reel-gradient"></div>
+                            <div class="absolute top-3 right-3">
+                                <i data-lucide="play" class="w-6 h-6 text-white fill-white"></i>
+                            </div>
+                            <div class="absolute bottom-3 left-3 right-3">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face" class="w-8 h-8 rounded-full border-2 border-white mb-2">
+                                <p class="text-white text-xs font-semibold line-clamp-2">Mode & Culture à Lubumbashi</p>
+                            </div>
+                        </div>
+                        <!-- Reel 4 -->
+                        <div class="flex-shrink-0 w-36 h-64 rounded-xl overflow-hidden relative cursor-pointer group">
+                            <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?w=300&h=500&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 reel-gradient"></div>
+                            <div class="absolute top-3 right-3">
+                                <i data-lucide="play" class="w-6 h-6 text-white fill-white"></i>
+                            </div>
+                            <div class="absolute bottom-3 left-3 right-3">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" class="w-8 h-8 rounded-full border-2 border-white mb-2">
+                                <p class="text-white text-xs font-semibold line-clamp-2">Tech & Innovation au Congo</p>
+                            </div>
+                        </div>
+                        <!-- Reel 5 -->
+                        <div class="flex-shrink-0 w-36 h-64 rounded-xl overflow-hidden relative cursor-pointer group">
+                            <img src="https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=300&h=500&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 reel-gradient"></div>
+                            <div class="absolute top-3 right-3">
+                                <i data-lucide="play" class="w-6 h-6 text-white fill-white"></i>
+                            </div>
+                            <div class="absolute bottom-3 left-3 right-3">
+                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=50&h=50&fit=crop&crop=face" class="w-8 h-8 rounded-full border-2 border-white mb-2">
+                                <p class="text-white text-xs font-semibold line-clamp-2">Nature & Aventure 🌿</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feed Posts -->
+                <div class="space-y-4 pb-8">
+                    
+                    <!-- Post 1: Photo -->
+                    <article class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                        <!-- Post Header -->
+                        <div class="flex items-center justify-between p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="story-ring">
+                                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full object-cover">
+                                </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-semibold text-sm hover:underline cursor-pointer">Marie Lumumba</span>
+                                        <i data-lucide="badge-check" class="w-4 h-4 text-congo-gold fill-congo-gold"></i>
+                                    </div>
+                                    <div class="text-xs text-gray-500">Kinshasa, RDC • Il y a 2h</div>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Post Image -->
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&h=600&fit=crop" class="w-full aspect-[4/3] object-cover">
+                            <div class="absolute top-4 right-4 bg-black/50 backdrop-blur text-white text-xs px-3 py-1 rounded-full">
+                                <i data-lucide="map-pin" class="w-3 h-3 inline mr-1"></i> Kinshasa
+                            </div>
+                        </div>
+
+                        <!-- Post Actions -->
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center space-x-4">
+                                    <button onclick="toggleLike(this)" class="text-gray-600 hover:text-red-500 transition-colors group">
+                                        <i data-lucide="heart" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="message-circle" class="w-7 h-7"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="send" class="w-7 h-7"></i>
+                                    </button>
+                                </div>
+                                <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                    <i data-lucide="bookmark" class="w-7 h-7"></i>
+                                </button>
+                            </div>
+
+                            <!-- Likes -->
+                            <div class="font-semibold text-sm mb-2">1,234 J'aime</div>
+
+                            <!-- Caption -->
+                            <div class="mb-2">
+                                <span class="font-semibold text-sm mr-1">Marie Lumumba</span>
+                                <span class="text-sm text-gray-700">
+                                    La beauté de notre capitale ! 🌆✨ Kinshasa by night, un spectacle unique au monde. 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#CongoExplorer</span> 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#Kinshasa</span> 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#RDC</span>
+                                </span>
+                            </div>
+
+                            <!-- Comments Preview -->
+                            <div class="text-gray-500 text-sm mb-2 cursor-pointer hover:text-gray-700">
+                                Voir les 89 commentaires
+                            </div>
+                            <div class="text-xs text-gray-400 uppercase tracking-wide mb-3">
+                                Il y a 2 heures
+                            </div>
+
+                            <!-- Add Comment -->
+                            <div class="flex items-center space-x-3 pt-3 border-t border-gray-100">
+                                <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                                <input type="text" placeholder="Ajouter un commentaire..." class="flex-1 text-sm focus:outline-none">
+                                <button class="text-congo-gold font-semibold text-sm hover:text-congo-gold-light">Publier</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Post 2: Video -->
+                    <article class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                        <div class="flex items-center justify-between p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="story-ring-seen">
+                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full object-cover">
+                                </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-semibold text-sm hover:underline cursor-pointer">David Kanda</span>
+                                        <span class="text-xs bg-congo-gold/20 text-congo-dark px-2 py-0.5 rounded-full">Photographe</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500">Lubumbashi • Il y a 4h</div>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Video Post -->
+                        <div class="relative bg-black">
+                            <img src="https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=800&h=500&fit=crop" class="w-full aspect-video object-cover">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <button class="w-16 h-16 bg-white/20 backdrop-blur rounded-full flex items-center justify-center hover:bg-white/30 transition-all group">
+                                    <i data-lucide="play" class="w-8 h-8 text-white fill-white ml-1"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-4 right-4 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                                2:34
+                            </div>
+                            <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-700">
+                                <div class="h-full bg-congo-gold w-1/3"></div>
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center space-x-4">
+                                    <button onclick="toggleLike(this)" class="text-gray-600 hover:text-red-500 transition-colors group">
+                                        <i data-lucide="heart" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="message-circle" class="w-7 h-7"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="send" class="w-7 h-7"></i>
+                                    </button>
+                                </div>
+                                <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                    <i data-lucide="bookmark" class="w-7 h-7"></i>
+                                </button>
+                            </div>
+                            <div class="font-semibold text-sm mb-2">856 J'aime</div>
+                            <div class="mb-2">
+                                <span class="font-semibold text-sm mr-1">David Kanda</span>
+                                <span class="text-sm text-gray-700">
+                                    Interview exclusive avec les artisans de Lubumbashi ! 🎥 Le savoir-faire congolais mérite d'être célébré. 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#Artisanat</span> 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#Congo</span>
+                                </span>
+                            </div>
+                            <div class="text-gray-500 text-sm mb-2 cursor-pointer hover:text-gray-700">
+                                Voir les 45 commentaires
+                            </div>
+                            <div class="text-xs text-gray-400 uppercase tracking-wide mb-3">
+                                Il y a 4 heures
+                            </div>
+                            <div class="flex items-center space-x-3 pt-3 border-t border-gray-100">
+                                <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                                <input type="text" placeholder="Ajouter un commentaire..." class="flex-1 text-sm focus:outline-none">
+                                <button class="text-congo-gold font-semibold text-sm hover:text-congo-gold-light">Publier</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Post 3: Carousel (Multiple Photos) -->
+                    <article class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                        <div class="flex items-center justify-between p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="story-ring">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full object-cover">
+                                </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-semibold text-sm hover:underline cursor-pointer">Amina Tshibola</span>
+                                        <i data-lucide="badge-check" class="w-4 h-4 text-congo-gold fill-congo-gold"></i>
+                                    </div>
+                                    <div class="text-xs text-gray-500">Goma, RDC • Il y a 6h</div>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Carousel -->
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=600&fit=crop" class="w-full aspect-[4/3] object-cover">
+                            <div class="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+                                1 / 3
+                            </div>
+                            <button class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition-colors">
+                                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                            </button>
+                            <button class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition-colors">
+                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </button>
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                                <div class="w-2 h-2 bg-white/50 rounded-full"></div>
+                                <div class="w-2 h-2 bg-white/50 rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center space-x-4">
+                                    <button onclick="toggleLike(this)" class="text-gray-600 hover:text-red-500 transition-colors group">
+                                        <i data-lucide="heart" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="message-circle" class="w-7 h-7"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="send" class="w-7 h-7"></i>
+                                    </button>
+                                </div>
+                                <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                    <i data-lucide="bookmark" class="w-7 h-7"></i>
+                                </button>
+                            </div>
+                            <div class="font-semibold text-sm mb-2">2,567 J'aime</div>
+                            <div class="mb-2">
+                                <span class="font-semibold text-sm mr-1">Amina Tshibola</span>
+                                <span class="text-sm text-gray-700">
+                                    Le lac Kivu, un trésor naturel de notre pays ! 🌊💙 La RDC regorge de merveilles à découvrir. 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#Goma</span> 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#LacKivu</span> 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#TourismeRDC</span>
+                                </span>
+                            </div>
+                            <div class="text-gray-500 text-sm mb-2 cursor-pointer hover:text-gray-700">
+                                Voir les 234 commentaires
+                            </div>
+                            <div class="text-xs text-gray-400 uppercase tracking-wide mb-3">
+                                Il y a 6 heures
+                            </div>
+                            <div class="flex items-center space-x-3 pt-3 border-t border-gray-100">
+                                <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                                <input type="text" placeholder="Ajouter un commentaire..." class="flex-1 text-sm focus:outline-none">
+                                <button class="text-congo-gold font-semibold text-sm hover:text-congo-gold-light">Publier</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Post 4: Event Card -->
+                    <article class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                        <div class="flex items-center justify-between p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-congo-green flex items-center justify-center">
+                                    <img src="/mnt/agents/upload/hub2.png" class="w-8 h-8 object-contain">
+                                </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-semibold text-sm hover:underline cursor-pointer">Congo Explorer Hub</span>
+                                        <i data-lucide="badge-check" class="w-4 h-4 text-congo-gold fill-congo-gold"></i>
+                                    </div>
+                                    <div class="text-xs text-gray-500">Sponsorisé • Il y a 8h</div>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Event Banner -->
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?w=800&h=400&fit=crop" class="w-full aspect-[2/1] object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <div class="inline-block bg-congo-gold text-congo-dark text-xs font-bold px-3 py-1 rounded-full mb-2">ÉVÉNEMENT</div>
+                                <h3 class="text-white font-bold text-xl mb-1">Congo Innovation Summit 2026</h3>
+                                <div class="flex items-center text-white/80 text-sm space-x-4">
+                                    <span class="flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i> 15 Juin 2026</span>
+                                    <span class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-1"></i> Kinshasa</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center space-x-4">
+                                    <button onclick="toggleLike(this)" class="text-gray-600 hover:text-red-500 transition-colors group">
+                                        <i data-lucide="heart" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="message-circle" class="w-7 h-7"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="send" class="w-7 h-7"></i>
+                                    </button>
+                                </div>
+                                <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                    <i data-lucide="bookmark" class="w-7 h-7"></i>
+                                </button>
+                            </div>
+                            <div class="font-semibold text-sm mb-2">3,421 J'aime</div>
+                            <div class="mb-3">
+                                <span class="font-semibold text-sm mr-1">Congo Explorer Hub</span>
+                                <span class="text-sm text-gray-700">
+                                    🚀 Le plus grand événement tech du Congo arrive ! Rejoignez-nous pour 2 jours d'innovation, de networking et de découvertes. 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#CongoInnovation</span> 
+                                    <span class="text-congo-gold cursor-pointer hover:underline">#Tech</span>
+                                </span>
+                            </div>
+                            <button class="w-full py-2.5 bg-congo-gold text-congo-dark font-bold rounded-lg hover:bg-congo-gold-light transition-colors mb-3">
+                                S'inscrire à l'événement
+                            </button>
+                            <div class="text-xs text-gray-400 uppercase tracking-wide mb-3">
+                                Il y a 8 heures
+                            </div>
+                            <div class="flex items-center space-x-3 pt-3 border-t border-gray-100">
+                                <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                                <input type="text" placeholder="Ajouter un commentaire..." class="flex-1 text-sm focus:outline-none">
+                                <button class="text-congo-gold font-semibold text-sm hover:text-congo-gold-light">Publier</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Loading More -->
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-congo-gold"></div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar (Desktop) -->
+            <aside class="hidden lg:block w-80 fixed right-0 h-screen overflow-y-auto hide-scrollbar pt-8 px-4">
+                <!-- Trending Topics -->
+                <div class="bg-white rounded-xl border border-gray-200 p-4 mb-4">
+                    <h3 class="font-bold text-congo-dark mb-4 flex items-center gap-2">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-congo-gold"></i>
+                        Tendances Congo
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                            <div class="text-xs text-gray-500">Politique • Tendance</div>
+                            <div class="font-bold text-sm">#ElectionsRDC</div>
+                            <div class="text-xs text-gray-500">12.5K posts</div>
+                        </div>
+                        <div class="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                            <div class="text-xs text-gray-500">Culture • Tendance</div>
+                            <div class="font-bold text-sm">#RumbaCongolaise</div>
+                            <div class="text-xs text-gray-500">8.2K posts</div>
+                        </div>
+                        <div class="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                            <div class="text-xs text-gray-500">Sport • Tendance</div>
+                            <div class="font-bold text-sm">#LeopardsRDC</div>
+                            <div class="text-xs text-gray-500">5.7K posts</div>
+                        </div>
+                        <div class="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                            <div class="text-xs text-gray-500">Tech • Tendance</div>
+                            <div class="font-bold text-sm">#StartupCongo</div>
+                            <div class="text-xs text-gray-500">3.1K posts</div>
+                        </div>
+                    </div>
+                    <button class="text-congo-gold text-sm font-semibold mt-3 hover:underline">Voir plus</button>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="bg-white rounded-xl border border-gray-200 p-4 mb-4">
+                    <h3 class="font-bold text-congo-dark mb-4 flex items-center gap-2">
+                        <i data-lucide="calendar" class="w-5 h-5 text-congo-green"></i>
+                        Événements à venir
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                            <div class="w-12 h-12 bg-congo-gold/20 rounded-lg flex flex-col items-center justify-center flex-shrink-0">
+                                <span class="text-xs font-bold text-congo-dark">JUIN</span>
+                                <span class="text-lg font-bold text-congo-gold">15</span>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-sm">Congo Innovation Summit</div>
+                                <div class="text-xs text-gray-500">Kinshasa • Tech</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                            <div class="w-12 h-12 bg-congo-green/20 rounded-lg flex flex-col items-center justify-center flex-shrink-0">
+                                <span class="text-xs font-bold text-congo-dark">JUIL</span>
+                                <span class="text-lg font-bold text-congo-green">02</span>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-sm">Festival Amani</div>
+                                <div class="text-xs text-gray-500">Goma • Musique</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Accounts -->
+                <div class="bg-white rounded-xl border border-gray-200 p-4">
+                    <h3 class="font-bold text-congo-dark mb-4">Suggestions</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div class="font-semibold text-sm">Sarah M.</div>
+                                    <div class="text-xs text-gray-500">Journaliste</div>
+                                </div>
+                            </div>
+                            <button class="text-congo-gold text-sm font-semibold hover:text-congo-gold-light">Suivre</button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div class="font-semibold text-sm">Jean K.</div>
+                                    <div class="text-xs text-gray-500">Photographe</div>
+                                </div>
+                            </div>
+                            <button class="text-congo-gold text-sm font-semibold hover:text-congo-gold-light">Suivre</button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <div class="font-semibold text-sm">David K.</div>
+                                    <div class="text-xs text-gray-500">Vidéaste</div>
+                                </div>
+                            </div>
+                            <button class="text-congo-gold text-sm font-semibold hover:text-congo-gold-light">Suivre</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Links -->
+                <div class="mt-4 text-xs text-gray-400 flex flex-wrap gap-x-3 gap-y-1">
+                    <a href="#" class="hover:underline">À propos</a>
+                    <a href="#" class="hover:underline">Confidentialité</a>
+                    <a href="#" class="hover:underline">Conditions</a>
+                    <a href="#" class="hover:underline">Publicité</a>
+                    <a href="#" class="hover:underline">Aide</a>
+                    <span>© 2026 Congo Explorer Hub</span>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+        <div class="flex items-center justify-around h-14">
+            <button class="p-2 nav-active text-congo-dark" onclick="switchTab('feed')">
+                <i data-lucide="home" class="w-6 h-6"></i>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('explore')">
+                <i data-lucide="compass" class="w-6 h-6"></i>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('reels')">
+                <i data-lucide="play-square" class="w-6 h-6"></i>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('create')">
+                <div class="w-8 h-8 bg-congo-gold rounded-lg flex items-center justify-center">
+                    <i data-lucide="plus" class="w-5 h-5 text-congo-dark"></i>
+                </div>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('messages')">
+                <i data-lucide="send" class="w-6 h-6"></i>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('profile')">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" class="w-6 h-6 rounded-full">
+            </button>
+        </div>
+    </nav>
+
+    <!-- Create Post Modal -->
+    <div id="create-modal" class="hidden fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-lg animate-slide-up">
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <h3 class="font-bold text-lg">Créer une publication</h3>
+                <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="flex items-center space-x-3 mb-4">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full">
+                    <div>
+                        <div class="font-semibold">Votre Nom</div>
+                        <div class="text-xs text-gray-500">Public</div>
+                    </div>
+                </div>
+                <textarea placeholder="Quoi de neuf, Congo Explorer ?" 
+                    class="w-full h-32 resize-none focus:outline-none text-lg placeholder-gray-400"></textarea>
+                
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-4 hover:border-congo-gold transition-colors cursor-pointer">
+                    <i data-lucide="image-plus" class="w-12 h-12 text-gray-400 mx-auto mb-2"></i>
+                    <p class="text-gray-500 font-medium">Ajouter des photos ou vidéos</p>
+                    <p class="text-gray-400 text-sm">ou faites glisser et déposez</p>
+                </div>
+
+                <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg mb-4">
+                    <span class="text-sm font-medium">Ajouter à votre publication</span>
+                    <div class="flex space-x-2">
+                        <button class="p-1.5 hover:bg-gray-100 rounded text-green-500"><i data-lucide="image" class="w-5 h-5"></i></button>
+                        <button class="p-1.5 hover:bg-gray-100 rounded text-blue-500"><i data-lucide="video" class="w-5 h-5"></i></button>
+                        <button class="p-1.5 hover:bg-gray-100 rounded text-yellow-500"><i data-lucide="smile" class="w-5 h-5"></i></button>
+                        <button class="p-1.5 hover:bg-gray-100 rounded text-red-500"><i data-lucide="map-pin" class="w-5 h-5"></i></button>
+                    </div>
+                </div>
+
+                <button class="w-full py-3 bg-congo-gold text-congo-dark font-bold rounded-xl hover:bg-congo-gold-light transition-colors">
+                    Publier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Profile menu toggle
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Close profile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('profile-menu');
+            const button = e.target.closest('button');
+            if (!button || !button.onclick || !button.onclick.toString().includes('toggleProfileMenu')) {
+                if (!e.target.closest('#profile-menu')) {
+                    menu.classList.add('hidden');
+                }
+            }
+        });
+
+        // Like toggle animation
+        function toggleLike(button) {
+            const icon = button.querySelector('svg');
+            if (button.classList.contains('text-red-500')) {
+                button.classList.remove('text-red-500');
+                button.classList.add('text-gray-600');
+                icon.setAttribute('fill', 'none');
+            } else {
+                button.classList.remove('text-gray-600');
+                button.classList.add('text-red-500');
+                icon.setAttribute('fill', 'currentColor');
+                button.classList.add('like-anim');
+                setTimeout(() => button.classList.remove('like-anim'), 400);
+            }
+        }
+
+        // Create post modal
+        function openCreateModal() {
+            document.getElementById('create-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCreateModal() {
+            document.getElementById('create-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Tab switching (visual only for demo)
+        function switchTab(tab) {
+            // Reset all nav icons
+            document.querySelectorAll('.nav-active').forEach(el => {
+                el.classList.remove('nav-active');
+                el.classList.add('text-gray-400');
+                el.classList.remove('text-congo-dark');
+            });
+            
+            // Activate clicked tab
+            event.currentTarget.classList.add('nav-active');
+            event.currentTarget.classList.remove('text-gray-400');
+            event.currentTarget.classList.add('text-congo-dark');
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('create-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeCreateModal();
+            }
+        });
+    </script>
+</body>
+</html>

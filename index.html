@@ -1,489 +1,1134 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congo Explorer Hub - The Other Face of Congo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'congo-dark': '#1a2e2a',
+                        'congo-green': '#2d5a4c',
+                        'congo-gold': '#d4a843',
+                        'congo-gold-light': '#f0c96e',
+                        'congo-navy': '#1e3a5f',
+                        'congo-cream': '#f5f0e8',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'serif': ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #1a2e2a 0%, #2d5a4c 50%, #1e3a5f 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #d4a843 0%, #f0c96e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(212, 168, 67, 0.25);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .like-anim {
+            animation: likePop 0.4s ease-out;
+        }
+        @keyframes likePop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .nav-active {
+            position: relative;
+        }
+        .nav-active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: #d4a843;
+            border-radius: 50%;
+        }
+    </style>
 </head>
+<body class="bg-congo-cream text-gray-800 font-sans overflow-x-hidden">
 
-<body>
-    <div class="container-xxl position-relative bg-white d-flex p-0">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-congo-dark/95 backdrop-blur-lg shadow-lg" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden border-2 border-congo-gold/50">
+                        <img src="img/hub2.png" alt="Congo Explorer Hub" class="w-8 h-8 object-contain">
+                    </div>
+                    <div class="hidden md:block">
+                        <span class="text-white font-bold text-lg tracking-tight">Congo Explorer<span class="text-congo-gold">Hub</span></span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                        <input type="text" placeholder="Rechercher des publications, événements..." 
+                            class="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-full text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-congo-gold/50 transition-all">
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-1 md:space-x-4">
+                    <button class="p-2 nav-active text-white" onclick="switchTab('feed')">
+                        <i data-lucide="home" class="w-6 h-6"></i>
+                    </button>
+                    <button class="p-2 text-white/60 hover:text-white transition-colors" onclick="switchTab('explore')">
+                        <i data-lucide="compass" class="w-6 h-6"></i>
+                    </button>
+                    <button class="p-2 text-white/60 hover:text-white transition-colors relative" onclick="switchTab('messages')">
+                        <i data-lucide="send" class="w-6 h-6"></i>
+                    </button>
+                    <button class="p-2 text-white/60 hover:text-white transition-colors relative" onclick="switchTab('notifications')">
+                        <i data-lucide="heart" class="w-6 h-6"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    
+                    <div class="relative ml-2">
+                        <button onclick="toggleProfileMenu()" class="w-8 h-8 rounded-full overflow-hidden border-2 border-congo-gold">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" alt="Profile" class="w-full h-full object-cover">
+                        </button>
+                        <div id="profile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                            <a href="#about" class="block px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
+                                <i data-lucide="info" class="w-4 h-4"></i> Qui sommes-nous
+                            </a>
+                            <a href="#services" class="block px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
+                                <i data-lucide="briefcase" class="w-4 h-4"></i> Nos expertises
+                            </a>
+                            <a href="#ambition" class="block px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
+                                <i data-lucide="target" class="w-4 h-4"></i> Notre ambition
+                            </a>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a href="#contact" class="block px-4 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-congo-gold font-semibold">
+                                <i data-lucide="mail" class="w-4 h-4"></i> Nous contacter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
             </div>
         </div>
-        <!-- Spinner End -->
-
-
-        <!-- Sidebar Start -->
-        <div class="sidebar pe-4 pb-3">
-            <nav class="navbar bg-light navbar-light">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
-                </a>
-                <div class="d-flex align-items-center ms-4 mb-4">
-                    <div class="position-relative">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span>
-                    </div>
-                </div>
-                <div class="navbar-nav w-100">
-                    <a href="index.html" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Elements</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item">Buttons</a>
-                            <a href="typography.html" class="dropdown-item">Typography</a>
-                            <a href="element.html" class="dropdown-item">Other Elements</a>
-                        </div>
-                    </div>
-                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>
-                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
-                    <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
-                    <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="signin.html" class="dropdown-item">Sign In</a>
-                            <a href="signup.html" class="dropdown-item">Sign Up</a>
-                            <a href="404.html" class="dropdown-item">404 Error</a>
-                            <a href="blank.html" class="dropdown-item">Blank Page</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-congo-dark/95 backdrop-blur-lg border-t border-white/10">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#about" class="block px-3 py-2 text-white/80 hover:text-congo-gold">Qui sommes-nous</a>
+                <a href="#services" class="block px-3 py-2 text-white/80 hover:text-congo-gold">Expertises</a>
+                <a href="#ambition" class="block px-3 py-2 text-white/80 hover:text-congo-gold">Ambition</a>
+                <a href="#contact" class="block px-3 py-2 text-congo-gold font-semibold">Nous contacter</a>
+            </div>
         </div>
-        <!-- Sidebar End -->
+    </nav>
 
-
-        <!-- Content Start -->
-        <div class="content">
-            <!-- Navbar Start -->
-            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
-                </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
-                </form>
-                <div class="navbar-nav align-items-center ms-auto">
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-envelope me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Message</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                    <div class="ms-2">
-                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all message</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">New user added</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                <h6 class="fw-normal mb-0">Password changed</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-center">See all notifications</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">John Doe</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!-- Navbar End -->
-
-
-            <!-- Sale & Revenue Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-line fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-area fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Sale & Revenue End -->
-
-
-            <!-- Sales Chart Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-light text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Worldwide Sales</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <canvas id="worldwide-sales"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-light text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Salse & Revenue</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <canvas id="salse-revenue"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Sales Chart End -->
-
-
-            <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Salse</h6>
-                        <a href="">Show All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-dark">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- Recent Sales End -->
-
-
-            <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">Messages</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Calender</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div id="calender"></div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">To Do List</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <input class="form-control bg-transparent" type="text" placeholder="Enter task">
-                                <button type="button" class="btn btn-primary ms-2">Add</button>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox" checked>
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span><del>Short task goes here...</del></span>
-                                        <button class="btn btn-sm text-primary"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Widgets End -->
-
-
-            <!-- Footer Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light rounded-top p-4">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Your Site Name</a>, All Right Reserved. 
-                        </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                        </br>
-                        Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Footer End -->
+    <!-- Hero Section -->
+    <section class="relative min-h-screen hero-gradient flex items-center justify-center overflow-hidden pt-16">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-congo-gold/20 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-congo-green/30 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-white/5 rounded-full"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/5 rounded-full"></div>
         </div>
-        <!-- Content End -->
 
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="animate-fade-in-up">
+                <!-- <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-8 backdrop-blur-sm">
+                    <span class="w-2 h-2 bg-congo-gold rounded-full mr-2 animate-pulse"></span>
+                    <span class="text-congo-gold-light text-sm font-medium">Lancé il y a 3 mois • Congo</span>
+                </div> -->
+                
+                <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
+                    L'autre face<br>
+                    <span class="text-gradient">du Congo</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-white/70 max-w-3xl mx-auto mb-12 font-light leading-relaxed">
+                    Nous révélons l'autre facette de chez nous. Les acteurs, les talents et les événements qui façonnent positivement la culture et l'écosystème congolais.
+                </p>
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="#feed" class="px-8 py-4 bg-congo-gold text-congo-dark font-bold rounded-full hover:bg-congo-gold-light transition-all transform hover:scale-105 shadow-lg shadow-congo-gold/25 flex items-center gap-2">
+                        Explorer le fil
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#about" class="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-full hover:bg-white/10 transition-all flex items-center gap-2">
+                        En savoir plus
+                    </a>
+                </div>
+            </div>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/chart/chart.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+                <div class="glass-card rounded-2xl p-6 animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="text-3xl font-bold text-congo-gold mb-1">3+</div>
+                    <div class="text-white/60 text-sm">Mois d'existence</div>
+                </div>
+                <div class="glass-card rounded-2xl p-6 animate-fade-in-up" style="animation-delay: 0.4s;">
+                    <div class="text-3xl font-bold text-congo-gold mb-1">360°</div>
+                    <div class="text-white/60 text-sm">Stratégies Marketing</div>
+                </div>
+                <div class="glass-card rounded-2xl p-6 animate-fade-in-up" style="animation-delay: 0.6s;">
+                    <div class="text-3xl font-bold text-congo-gold mb-1">100%</div>
+                    <div class="text-white/60 text-sm">Engagement</div>
+                </div>
+                <div class="glass-card rounded-2xl p-6 animate-fade-in-up" style="animation-delay: 0.8s;">
+                    <div class="text-3xl font-bold text-congo-gold mb-1">∞</div>
+                    <div class="text-white/60 text-sm">Créativité</div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="w-6 h-6 text-white/50"></i>
+        </div>
+    </section>
+
+    <!-- Publications & Tendances Section -->
+    <section id="feed" class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex gap-8">
+                
+                <!-- Main Feed -->
+                <main class="flex-1">
+                    <div class="space-y-6">
+                        
+                        <!-- Post 1: Photo -->
+                        <article class="bg-white border border-gray-200 rounded-xl overflow-hidden scroll-reveal">
+                            <div class="flex items-center justify-between p-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-congo-gold p-0.5">
+                                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=100&h=100&fit=crop&crop=face" class="w-full h-full rounded-full object-cover">
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="font-semibold text-sm hover:underline cursor-pointer">Marie Lumumba</span>
+                                            <i data-lucide="badge-check" class="w-4 h-4 text-congo-gold fill-congo-gold"></i>
+                                        </div>
+                                        <div class="text-xs text-gray-500">Kinshasa, RDC • Il y a 2h</div>
+                                    </div>
+                                </div>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&h=600&fit=crop" class="w-full aspect-[4/3] object-cover">
+                                <div class="absolute top-4 right-4 bg-black/50 backdrop-blur text-white text-xs px-3 py-1 rounded-full">
+                                    <i data-lucide="map-pin" class="w-3 h-3 inline mr-1"></i> Kinshasa
+                                </div>
+                            </div>
+
+                            <div class="p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-4">
+                                        <button onclick="toggleLike(this)" class="text-gray-600 hover:text-red-500 transition-colors group">
+                                            <i data-lucide="heart" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                            <i data-lucide="message-circle" class="w-7 h-7"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                            <i data-lucide="send" class="w-7 h-7"></i>
+                                        </button>
+                                    </div>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="bookmark" class="w-7 h-7"></i>
+                                    </button>
+                                </div>
+
+                                <div class="font-semibold text-sm mb-2">1,234 J'aime</div>
+
+                                <div class="mb-2">
+                                    <span class="font-semibold text-sm mr-1">Marie Lumumba</span>
+                                    <span class="text-sm text-gray-700">
+                                        La beauté de notre capitale ! 🌆✨ Kinshasa by night, un spectacle unique au monde. 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#CongoExplorer</span> 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#Kinshasa</span> 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#RDC</span>
+                                    </span>
+                                </div>
+
+                                <div class="text-gray-500 text-sm mb-2 cursor-pointer hover:text-gray-700">
+                                    Voir les 89 commentaires
+                                </div>
+                                <div class="text-xs text-gray-400 uppercase tracking-wide mb-3">
+                                    Il y a 2 heures
+                                </div>
+
+                                <div class="flex items-center space-x-3 pt-3 border-t border-gray-100">
+                                    <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                                    <input type="text" placeholder="Ajouter un commentaire..." class="flex-1 text-sm focus:outline-none">
+                                    <button class="text-congo-gold font-semibold text-sm hover:text-congo-gold-light">Publier</button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Post 2: Video -->
+                        <article class="bg-white border border-gray-200 rounded-xl overflow-hidden scroll-reveal">
+                            <div class="flex items-center justify-between p-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 p-0.5">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" class="w-full h-full rounded-full object-cover">
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="font-semibold text-sm hover:underline cursor-pointer">David Kanda</span>
+                                            <span class="text-xs bg-congo-gold/20 text-congo-dark px-2 py-0.5 rounded-full">Photographe</span>
+                                        </div>
+                                        <div class="text-xs text-gray-500">Lubumbashi • Il y a 4h</div>
+                                    </div>
+                                </div>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+                            <div class="relative bg-black">
+                                <img src="https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=800&h=500&fit=crop" class="w-full aspect-video object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <button class="w-16 h-16 bg-white/20 backdrop-blur rounded-full flex items-center justify-center hover:bg-white/30 transition-all group">
+                                        <i data-lucide="play" class="w-8 h-8 text-white fill-white ml-1"></i>
+                                    </button>
+                                </div>
+                                <div class="absolute bottom-4 right-4 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                                    2:34
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-700">
+                                    <div class="h-full bg-congo-gold w-1/3"></div>
+                                </div>
+                            </div>
+
+                            <div class="p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-4">
+                                        <button onclick="toggleLike(this)" class="text-gray-600 hover:text-red-500 transition-colors group">
+                                            <i data-lucide="heart" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                            <i data-lucide="message-circle" class="w-7 h-7"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                            <i data-lucide="send" class="w-7 h-7"></i>
+                                        </button>
+                                    </div>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="bookmark" class="w-7 h-7"></i>
+                                    </button>
+                                </div>
+                                <div class="font-semibold text-sm mb-2">856 J'aime</div>
+                                <div class="mb-2">
+                                    <span class="font-semibold text-sm mr-1">David Kanda</span>
+                                    <span class="text-sm text-gray-700">
+                                        Interview exclusive avec les artisans de Lubumbashi ! 🎥 Le savoir-faire congolais mérite d'être célébré. 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#Artisanat</span> 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#Congo</span>
+                                    </span>
+                                </div>
+                                <div class="text-gray-500 text-sm mb-2 cursor-pointer hover:text-gray-700">
+                                    Voir les 45 commentaires
+                                </div>
+                                <div class="text-xs text-gray-400 uppercase tracking-wide mb-3">
+                                    Il y a 4 heures
+                                </div>
+                                <div class="flex items-center space-x-3 pt-3 border-t border-gray-100">
+                                    <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                                    <input type="text" placeholder="Ajouter un commentaire..." class="flex-1 text-sm focus:outline-none">
+                                    <button class="text-congo-gold font-semibold text-sm hover:text-congo-gold-light">Publier</button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Post 3: Carousel -->
+                        <article class="bg-white border border-gray-200 rounded-xl overflow-hidden scroll-reveal">
+                            <div class="flex items-center justify-between p-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-congo-gold p-0.5">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" class="w-full h-full rounded-full object-cover">
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="font-semibold text-sm hover:underline cursor-pointer">Amina Tshibola</span>
+                                            <i data-lucide="badge-check" class="w-4 h-4 text-congo-gold fill-congo-gold"></i>
+                                        </div>
+                                        <div class="text-xs text-gray-500">Goma, RDC • Il y a 6h</div>
+                                    </div>
+                                </div>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=600&fit=crop" class="w-full aspect-[4/3] object-cover">
+                                <div class="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+                                    1 / 3
+                                </div>
+                                <button class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition-colors">
+                                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                                </button>
+                                <button class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition-colors">
+                                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                                </button>
+                                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-1">
+                                    <div class="w-2 h-2 bg-white rounded-full"></div>
+                                    <div class="w-2 h-2 bg-white/50 rounded-full"></div>
+                                    <div class="w-2 h-2 bg-white/50 rounded-full"></div>
+                                </div>
+                            </div>
+
+                            <div class="p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-4">
+                                        <button onclick="toggleLike(this)" class="text-gray-600 hover:text-red-500 transition-colors group">
+                                            <i data-lucide="heart" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                            <i data-lucide="message-circle" class="w-7 h-7"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                            <i data-lucide="send" class="w-7 h-7"></i>
+                                        </button>
+                                    </div>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="bookmark" class="w-7 h-7"></i>
+                                    </button>
+                                </div>
+                                <div class="font-semibold text-sm mb-2">2,567 J'aime</div>
+                                <div class="mb-2">
+                                    <span class="font-semibold text-sm mr-1">Amina Tshibola</span>
+                                    <span class="text-sm text-gray-700">
+                                        Le lac Kivu, un trésor naturel de notre pays ! 🌊💙 La RDC regorge de merveilles à découvrir. 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#Goma</span> 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#LacKivu</span> 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#TourismeRDC</span>
+                                    </span>
+                                </div>
+                                <div class="text-gray-500 text-sm mb-2 cursor-pointer hover:text-gray-700">
+                                    Voir les 234 commentaires
+                                </div>
+                                <div class="text-xs text-gray-400 uppercase tracking-wide mb-3">
+                                    Il y a 6 heures
+                                </div>
+                                <div class="flex items-center space-x-3 pt-3 border-t border-gray-100">
+                                    <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                                    <input type="text" placeholder="Ajouter un commentaire..." class="flex-1 text-sm focus:outline-none">
+                                    <button class="text-congo-gold font-semibold text-sm hover:text-congo-gold-light">Publier</button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Post 4: Event Card -->
+                        <article class="bg-white border border-gray-200 rounded-xl overflow-hidden scroll-reveal">
+                            <div class="flex items-center justify-between p-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full bg-congo-green flex items-center justify-center overflow-hidden">
+                                        <img src="/mnt/agents/upload/hub2.png" class="w-8 h-8 object-contain">
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="font-semibold text-sm hover:underline cursor-pointer">Congo Explorer Hub</span>
+                                            <i data-lucide="badge-check" class="w-4 h-4 text-congo-gold fill-congo-gold"></i>
+                                        </div>
+                                        <div class="text-xs text-gray-500">Sponsorisé • Il y a 8h</div>
+                                    </div>
+                                </div>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?w=800&h=400&fit=crop" class="w-full aspect-[2/1] object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                                <div class="absolute bottom-4 left-4 right-4">
+                                    <div class="inline-block bg-congo-gold text-congo-dark text-xs font-bold px-3 py-1 rounded-full mb-2">ÉVÉNEMENT</div>
+                                    <h3 class="text-white font-bold text-xl mb-1">Congo Innovation Summit 2026</h3>
+                                    <div class="flex items-center text-white/80 text-sm space-x-4">
+                                        <span class="flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-1"></i> 15 Juin 2026</span>
+                                        <span class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-1"></i> Kinshasa</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center space-x-4">
+                                        <button onclick="toggleLike(this)" class="text-gray-600 hover:text-red-500 transition-colors group">
+                                            <i data-lucide="heart" class="w-7 h-7 group-hover:scale-110 transition-transform"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                            <i data-lucide="message-circle" class="w-7 h-7"></i>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                            <i data-lucide="send" class="w-7 h-7"></i>
+                                        </button>
+                                    </div>
+                                    <button class="text-gray-600 hover:text-congo-dark transition-colors">
+                                        <i data-lucide="bookmark" class="w-7 h-7"></i>
+                                    </button>
+                                </div>
+                                <div class="font-semibold text-sm mb-2">3,421 J'aime</div>
+                                <div class="mb-3">
+                                    <span class="font-semibold text-sm mr-1">Congo Explorer Hub</span>
+                                    <span class="text-sm text-gray-700">
+                                        🚀 Le plus grand événement tech du Congo arrive ! Rejoignez-nous pour 2 jours d'innovation, de networking et de découvertes. 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#CongoInnovation</span> 
+                                        <span class="text-congo-gold cursor-pointer hover:underline">#Tech</span>
+                                    </span>
+                                </div>
+                                <button class="w-full py-2.5 bg-congo-gold text-congo-dark font-bold rounded-lg hover:bg-congo-gold-light transition-colors mb-3">
+                                    S'inscrire à l'événement
+                                </button>
+                                <div class="text-xs text-gray-400 uppercase tracking-wide mb-3">
+                                    Il y a 8 heures
+                                </div>
+                                <div class="flex items-center space-x-3 pt-3 border-t border-gray-100">
+                                    <i data-lucide="smile" class="w-5 h-5 text-gray-400"></i>
+                                    <input type="text" placeholder="Ajouter un commentaire..." class="flex-1 text-sm focus:outline-none">
+                                    <button class="text-congo-gold font-semibold text-sm hover:text-congo-gold-light">Publier</button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Loading More -->
+                        <div class="flex items-center justify-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-congo-gold"></div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Right Sidebar - Tendances (pas fixed, scroll avec la page) -->
+                <aside class="hidden lg:block w-80 flex-shrink-0">
+                    <div class="sticky top-20 space-y-4">
+                        
+                        <!-- Mini About -->
+                        <div class="bg-white rounded-xl border border-gray-200 p-4">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <img src="/mnt/agents/upload/hub2.png" class="w-12 h-12 object-contain">
+                                <div>
+                                    <div class="font-bold text-congo-dark text-sm">Congo Explorer<span class="text-congo-gold">Hub</span></div>
+                                    <div class="text-xs text-gray-500">The Other Face of Congo</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-600 leading-relaxed mb-3">
+                                Média engagé pour révéler les talents et événements qui façonnent positivement l'écosystème congolais.
+                            </p>
+                            <a href="#about" class="text-congo-gold text-xs font-semibold hover:underline">En savoir plus →</a>
+                        </div>
+
+                        <!-- Trending Topics -->
+                        <div class="bg-white rounded-xl border border-gray-200 p-4">
+                            <h3 class="font-bold text-congo-dark mb-4 flex items-center gap-2">
+                                <i data-lucide="trending-up" class="w-5 h-5 text-congo-gold"></i>
+                                Tendances Congo
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <div class="text-xs text-gray-500">Politique • Tendance</div>
+                                    <div class="font-bold text-sm">#ElectionsRDC</div>
+                                    <div class="text-xs text-gray-500">12.5K posts</div>
+                                </div>
+                                <div class="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <div class="text-xs text-gray-500">Culture • Tendance</div>
+                                    <div class="font-bold text-sm">#RumbaCongolaise</div>
+                                    <div class="text-xs text-gray-500">8.2K posts</div>
+                                </div>
+                                <div class="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <div class="text-xs text-gray-500">Sport • Tendance</div>
+                                    <div class="font-bold text-sm">#LeopardsRDC</div>
+                                    <div class="text-xs text-gray-500">5.7K posts</div>
+                                </div>
+                                <div class="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <div class="text-xs text-gray-500">Tech • Tendance</div>
+                                    <div class="font-bold text-sm">#StartupCongo</div>
+                                    <div class="text-xs text-gray-500">3.1K posts</div>
+                                </div>
+                            </div>
+                            <button class="text-congo-gold text-sm font-semibold mt-3 hover:underline">Voir plus</button>
+                        </div>
+
+                        <!-- Upcoming Events -->
+                        <div class="bg-white rounded-xl border border-gray-200 p-4">
+                            <h3 class="font-bold text-congo-dark mb-4 flex items-center gap-2">
+                                <i data-lucide="calendar" class="w-5 h-5 text-congo-green"></i>
+                                Événements à venir
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <div class="w-12 h-12 bg-congo-gold/20 rounded-lg flex flex-col items-center justify-center flex-shrink-0">
+                                        <span class="text-xs font-bold text-congo-dark">JUIN</span>
+                                        <span class="text-lg font-bold text-congo-gold">15</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-sm">Congo Innovation Summit</div>
+                                        <div class="text-xs text-gray-500">Kinshasa • Tech</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <div class="w-12 h-12 bg-congo-green/20 rounded-lg flex flex-col items-center justify-center flex-shrink-0">
+                                        <span class="text-xs font-bold text-congo-dark">JUIL</span>
+                                        <span class="text-lg font-bold text-congo-green">02</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-sm">Festival Amani</div>
+                                        <div class="text-xs text-gray-500">Goma • Musique</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Suggested Accounts -->
+                        <div class="bg-white rounded-xl border border-gray-200 p-4">
+                            <h3 class="font-bold text-congo-dark mb-4">Suggestions</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <div class="font-semibold text-sm">Sarah M.</div>
+                                            <div class="text-xs text-gray-500">Journaliste</div>
+                                        </div>
+                                    </div>
+                                    <button class="text-congo-gold text-sm font-semibold hover:text-congo-gold-light">Suivre</button>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <div class="font-semibold text-sm">Jean K.</div>
+                                            <div class="text-xs text-gray-500">Photographe</div>
+                                        </div>
+                                    </div>
+                                    <button class="text-congo-gold text-sm font-semibold hover:text-congo-gold-light">Suivre</button>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <div class="font-semibold text-sm">David K.</div>
+                                            <div class="text-xs text-gray-500">Vidéaste</div>
+                                        </div>
+                                    </div>
+                                    <button class="text-congo-gold text-sm font-semibold hover:text-congo-gold-light">Suivre</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expertises -->
+                        <div class="bg-white rounded-xl border border-gray-200 p-4">
+                            <h3 class="font-bold text-congo-dark mb-3">Nos expertises</h3>
+                            <div class="space-y-2">
+                                <a href="#services" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 bg-congo-green/10 rounded-lg flex items-center justify-center">
+                                        <i data-lucide="camera" class="w-4 h-4 text-congo-green"></i>
+                                    </div>
+                                    <span class="text-sm font-medium">Communication</span>
+                                </a>
+                                <a href="#services" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 bg-congo-gold/10 rounded-lg flex items-center justify-center">
+                                        <i data-lucide="megaphone" class="w-4 h-4 text-congo-gold"></i>
+                                    </div>
+                                    <span class="text-sm font-medium">Marketing</span>
+                                </a>
+                                <a href="#services" class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 bg-congo-navy/10 rounded-lg flex items-center justify-center">
+                                        <i data-lucide="calendar" class="w-4 h-4 text-congo-navy"></i>
+                                    </div>
+                                    <span class="text-sm font-medium">Événements</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Footer Links -->
+                        <div class="text-xs text-gray-400 flex flex-wrap gap-x-3 gap-y-1 px-2">
+                            <a href="#about" class="hover:underline">À propos</a>
+                            <a href="#services" class="hover:underline">Expertises</a>
+                            <a href="#ambition" class="hover:underline">Ambition</a>
+                            <a href="#contact" class="hover:underline">Contact</a>
+                            <span>© 2026 Congo Explorer Hub</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="scroll-reveal">
+                    <div class="inline-block px-4 py-1.5 bg-congo-green/10 text-congo-green rounded-full text-sm font-semibold mb-6">
+                        Qui sommes-nous ?
+                    </div>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold text-congo-dark mb-6 leading-tight">
+                        Un média engagé pour <span class="text-congo-gold">changer le narratif</span>
+                    </h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        Lancé il y a 3 mois, <strong class="text-congo-dark">Congo Explorer Hub</strong> est né de la volonté de révéler une autre facette de chez nous. Nous mettons en lumière les acteurs, les talents et les événements qui façonnent positivement la culture et l'écosystème congolais.
+                    </p>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-8">
+                        Jeune structure portée par une équipe engagée, nous allions créativité, réactivité et connaissance du terrain. Notre mission : changer le narratif, un projet à la fois.
+                    </p>
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="flex -space-x-3">
+                            <div class="w-12 h-12 rounded-full bg-congo-green flex items-center justify-center text-white font-bold border-2 border-white">C</div>
+                            <div class="w-12 h-12 rounded-full bg-congo-gold flex items-center justify-center text-congo-dark font-bold border-2 border-white">E</div>
+                            <div class="w-12 h-12 rounded-full bg-congo-navy flex items-center justify-center text-white font-bold border-2 border-white">H</div>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-congo-dark">Équipe engagée</div>
+                            <div class="text-sm text-gray-500">Passionnée et déterminée</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative scroll-reveal">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+                        <div class="absolute inset-0 bg-gradient-to-br from-congo-green/20 to-congo-gold/20 z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&h=600&fit=crop" alt="Congo Landscape" class="w-full h-[500px] object-cover transform hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 bg-congo-gold text-congo-dark p-6 rounded-2xl shadow-xl z-20">
+                        <div class="text-3xl font-bold">2026</div>
+                        <div class="text-sm font-medium">Lancement officiel</div>
+                    </div>
+                    <div class="absolute -top-6 -right-6 bg-congo-dark text-white p-4 rounded-2xl shadow-xl z-20">
+                        <i data-lucide="trending-up" class="w-8 h-8 text-congo-gold"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 bg-congo-cream relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-congo-green/5 skew-x-12"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 scroll-reveal">
+                <div class="inline-block px-4 py-1.5 bg-congo-gold/20 text-congo-dark rounded-full text-sm font-semibold mb-6">
+                    Nos domaines d'expertise
+                </div>
+                <h2 class="font-serif text-4xl md:text-5xl font-bold text-congo-dark mb-6">
+                    Des solutions <span class="text-congo-gold">sur-mesure</span>
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    De la communication à l'organisation d'événements, nous couvrons tous les aspects pour faire briller votre projet.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="service-card bg-white rounded-3xl p-8 shadow-lg border border-gray-100 transition-all duration-500 scroll-reveal group cursor-pointer">
+                    <div class="w-16 h-16 bg-congo-green/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-congo-green transition-colors">
+                        <i data-lucide="camera" class="w-8 h-8 text-congo-green group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-congo-dark mb-4">Communication & Couverture d'événements</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Production de contenus éditoriaux, photo et vidéo. Interviews, reportages et live coverage pour donner de l'écho aux initiatives locales qui méritent d'être vues.
+                    </p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Contenus éditoriaux
+                        </li>
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Photo & Vidéo
+                        </li>
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Live coverage
+                        </li>
+                    </ul>
+                    <div class="flex items-center text-congo-green font-semibold group-hover:text-congo-gold transition-colors">
+                        En savoir plus <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </div>
+
+                <div class="service-card bg-white rounded-3xl p-8 shadow-lg border border-gray-100 transition-all duration-500 scroll-reveal group cursor-pointer" style="transition-delay: 0.1s;">
+                    <div class="w-16 h-16 bg-congo-gold/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-congo-gold transition-colors">
+                        <i data-lucide="megaphone" class="w-8 h-8 text-congo-gold group-hover:text-congo-dark transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-congo-dark mb-4">Marketing Digital & Physique</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Stratégies 360° pour les marques et projets. Campagnes social media, influence, street marketing et activations terrain pour créer une connexion réelle avec votre audience.
+                    </p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Social Media
+                        </li>
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Influence
+                        </li>
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Street Marketing
+                        </li>
+                    </ul>
+                    <div class="flex items-center text-congo-green font-semibold group-hover:text-congo-gold transition-colors">
+                        En savoir plus <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </div>
+
+                <div class="service-card bg-white rounded-3xl p-8 shadow-lg border border-gray-100 transition-all duration-500 scroll-reveal group cursor-pointer" style="transition-delay: 0.2s;">
+                    <div class="w-16 h-16 bg-congo-navy/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-congo-navy transition-colors">
+                        <i data-lucide="calendar" class="w-8 h-8 text-congo-navy group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-congo-dark mb-4">Organisation d'événements</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Conception et pilotage d'expériences sur-mesure. De l'idéation à la production, nous créons des moments à fort impact qui marquent les esprits.
+                    </p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Conception sur-mesure
+                        </li>
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Pilotage complet
+                        </li>
+                        <li class="flex items-center text-sm text-gray-500">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-congo-gold mr-2"></i>
+                            Fort impact
+                        </li>
+                    </ul>
+                    <div class="flex items-center text-congo-green font-semibold group-hover:text-congo-gold transition-colors">
+                        En savoir plus <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ambition Section -->
+    <section id="ambition" class="py-24 bg-congo-dark text-white relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 scroll-reveal">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-4">
+                            <div class="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10 hover:border-congo-gold/50 transition-colors">
+                                <i data-lucide="lightbulb" class="w-8 h-8 text-congo-gold mb-3"></i>
+                                <h4 class="font-bold mb-1">Créativité</h4>
+                                <p class="text-white/60 text-sm">Des idées innovantes et originales</p>
+                            </div>
+                            <div class="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10 hover:border-congo-gold/50 transition-colors">
+                                <i data-lucide="zap" class="w-8 h-8 text-congo-gold mb-3"></i>
+                                <h4 class="font-bold mb-1">Réactivité</h4>
+                                <p class="text-white/60 text-sm">Une équipe réactive et agile</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4 mt-8">
+                            <div class="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10 hover:border-congo-gold/50 transition-colors">
+                                <i data-lucide="map-pin" class="w-8 h-8 text-congo-gold mb-3"></i>
+                                <h4 class="font-bold mb-1">Terrain</h4>
+                                <p class="text-white/60 text-sm">Connaissance approfondie du local</p>
+                            </div>
+                            <div class="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10 hover:border-congo-gold/50 transition-colors">
+                                <i data-lucide="target" class="w-8 h-8 text-congo-gold mb-3"></i>
+                                <h4 class="font-bold mb-1">Impact</h4>
+                                <p class="text-white/60 text-sm">Des résultats mesurables</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-1 lg:order-2 scroll-reveal">
+                    <div class="inline-block px-4 py-1.5 bg-congo-gold/20 text-congo-gold rounded-full text-sm font-semibold mb-6">
+                        Notre ambition
+                    </div>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                        Changer le narratif,<br>
+                        <span class="text-congo-gold">un projet à la fois</span>
+                    </h2>
+                    <p class="text-white/70 text-lg leading-relaxed mb-8">
+                        Congo Explorer Hub n'est pas qu'un simple média. C'est un mouvement. Une volonté de montrer au monde que le Congo est bien plus que ce qu'on en dit. C'est un pays de talents, d'innovations et de créativité.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-congo-gold/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="text-congo-gold font-bold">1</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Révéler les talents locaux</h4>
+                                <p class="text-white/60">Mettre en lumière ceux qui façonnent l'avenir du Congo</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-congo-gold/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="text-congo-gold font-bold">2</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Créer des connexions</h4>
+                                <p class="text-white/60">Relier les acteurs pour un écosystème plus fort</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-congo-gold/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="text-congo-gold font-bold">3</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Inspirer le changement</h4>
+                                <p class="text-white/60">Montrer que tout est possible avec passion et détermination</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="py-24 bg-gradient-to-br from-congo-green to-congo-dark relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-congo-gold/10 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 scroll-reveal">
+            <h2 class="font-serif text-4xl md:text-5xl font-bold text-white mb-6">
+                Prêt à révéler <span class="text-congo-gold">votre histoire</span> ?
+            </h2>
+            <p class="text-white/70 text-xl mb-10 max-w-2xl mx-auto">
+                Que vous soyez une marque, un artiste ou une organisation, nous sommes là pour vous accompagner dans votre visibilité et votre impact.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="mailto:contact@congoexplorerhub.com" class="px-8 py-4 bg-congo-gold text-congo-dark font-bold rounded-full hover:bg-congo-gold-light transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                    Nous contacter
+                </a>
+                <a href="#" class="px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-full hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="download" class="w-5 h-5"></i>
+                    Notre plaquette
+                </a>
+            </div>
+
+            <div class="mt-12 flex justify-center gap-6">
+                <a href="#" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-congo-gold hover:text-congo-dark transition-all text-white">
+                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-congo-gold hover:text-congo-dark transition-all text-white">
+                    <i data-lucide="twitter" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-congo-gold hover:text-congo-dark transition-all text-white">
+                    <i data-lucide="facebook" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-congo-gold hover:text-congo-dark transition-all text-white">
+                    <i data-lucide="linkedin" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-congo-gold hover:text-congo-dark transition-all text-white">
+                    <i data-lucide="youtube" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-congo-dark border-t border-white/10 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="img/hub2.png" alt="Congo Explorer Hub" class="w-10 h-10 object-contain">
+                        <span class="text-white font-bold text-xl">Congo Explorer<span class="text-congo-gold">Hub</span></span>
+                    </div>
+                    <p class="text-white/50 max-w-sm">
+                        L'autre face du Congo. Révéler les talents, les acteurs et les événements qui façonnent positivement l'écosystème congolais.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Navigation</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-white/50 hover:text-congo-gold transition-colors">Qui sommes-nous</a></li>
+                        <li><a href="#services" class="text-white/50 hover:text-congo-gold transition-colors">Expertises</a></li>
+                        <li><a href="#ambition" class="text-white/50 hover:text-congo-gold transition-colors">Ambition</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2">
+                        <li class="text-white/50 flex items-center gap-2">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            contact@congoexplorerhub.com
+                        </li>
+                        <li class="text-white/50 flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i>
+                            Congo
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-white/30 text-sm">© 2026 Congo Explorer Hub. Tous droits réservés.</p>
+                <p class="text-white/30 text-sm mt-2 md:mt-0">Fait avec ❤️ au Congo</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+        <div class="flex items-center justify-around h-14">
+            <button class="p-2 nav-active text-congo-dark" onclick="switchTab('feed')">
+                <i data-lucide="home" class="w-6 h-6"></i>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('explore')">
+                <i data-lucide="compass" class="w-6 h-6"></i>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('messages')">
+                <i data-lucide="send" class="w-6 h-6"></i>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('notifications')">
+                <i data-lucide="heart" class="w-6 h-6"></i>
+            </button>
+            <button class="p-2 text-gray-400" onclick="switchTab('profile')">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" class="w-6 h-6 rounded-full">
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('profile-menu');
+            const button = e.target.closest('button');
+            if (!button || !button.onclick || !button.onclick.toString().includes('toggleProfileMenu')) {
+                if (!e.target.closest('#profile-menu')) {
+                    menu.classList.add('hidden');
+                }
+            }
+        });
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleLike(button) {
+            const icon = button.querySelector('svg');
+            if (button.classList.contains('text-red-500')) {
+                button.classList.remove('text-red-500');
+                button.classList.add('text-gray-600');
+                icon.setAttribute('fill', 'none');
+            } else {
+                button.classList.remove('text-gray-600');
+                button.classList.add('text-red-500');
+                icon.setAttribute('fill', 'currentColor');
+                button.classList.add('like-anim');
+                setTimeout(() => button.classList.remove('like-anim'), 400);
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-active').forEach(el => {
+                el.classList.remove('nav-active');
+                el.classList.add('text-gray-400');
+                el.classList.remove('text-congo-dark');
+            });
+            event.currentTarget.classList.add('nav-active');
+            event.currentTarget.classList.remove('text-gray-400');
+            event.currentTarget.classList.add('text-congo-dark');
+        }
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>
