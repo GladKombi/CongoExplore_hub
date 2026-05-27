@@ -1034,6 +1034,7 @@
                         <li><a href="#about" class="footer-link text-white/40 text-xs md:text-sm hover:text-gold-400 transition-colors">Qui sommes-nous</a></li>
                         <li><a href="#services" class="footer-link text-white/40 text-xs md:text-sm hover:text-gold-400 transition-colors">Services</a></li>
                         <li><a href="#vision" class="footer-link text-white/40 text-xs md:text-sm hover:text-gold-400 transition-colors">Notre vision</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>login" class="footer-link text-white/40 text-xs md:text-sm hover:text-gold-400 transition-colors">Se connecter</a></li>
                     </ul>
                 </div>
 
