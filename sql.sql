@@ -52,11 +52,46 @@ CREATE TABLE IF NOT EXISTS contenus (
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS media_galleries (
-    contenu_id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    contenu_id INT NOT NULL,
     type_media ENUM('Photo', 'Video', 'Interview', 'Reportage') NOT NULL,
     url_fichier VARCHAR(255) NOT NULL,
     supprimer int DEFAULT 0, -- 0 = actif, 1 = supprimé (soft delete)
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS commentaires (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    contenu_id INT NOT NULL,
+    ip_address varchar(45) DEFAULT NULL,
+    commentaire TEXT NOT NULL,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    supprimer int DEFAULT 0 -- 0 = actif, 1 = supprimé (soft delete)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS likes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    contenu_id INT NOT NULL,
+    ip_address varchar(45) DEFAULT NULL,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    supprimer int DEFAULT 0 -- 0 = actif, 1 = supprimé (soft delete)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS partages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    contenu_id INT NOT NULL,
+    plateforme ENUM('Facebook', 'Twitter', 'LinkedIn', 'WhatsApp', 'Email') NOT NULL,
+    ip_address varchar(45) DEFAULT NULL,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    supprimer int DEFAULT 0 -- 0 = actif, 1 = supprimé (soft delete)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS favoris (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    contenu_id INT NOT NULL,
+    ip_address varchar(45) DEFAULT NULL,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    supprimer int DEFAULT 0 -- 0 = actif, 1 = supprimé (soft delete)
 ) ENGINE=InnoDB;
 
 -- =========================================================================
@@ -114,7 +149,7 @@ CREATE TABLE IF NOT EXISTS evenements (
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-Create TABLE IF NOT EXISTS media_evenements (
+CREATE TABLE IF NOT EXISTS media_evenements (
     id INT AUTO_INCREMENT PRIMARY KEY,
     evenement_id INT NOT NULL,
     type_media ENUM('Photo', 'Video', 'Interview', 'Reportage') NOT NULL,

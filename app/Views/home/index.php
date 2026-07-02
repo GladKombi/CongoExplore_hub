@@ -47,6 +47,22 @@
             background-color: #f9f7f3;
         }
 
+        [data-lucide] {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: currentColor;
+        }
+
+        [data-lucide] svg,
+        svg[data-lucide] {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            color: currentColor;
+            flex-shrink: 0;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -429,6 +445,90 @@
 
             <div class="flex gap-6 lg:gap-10">
                 <main class="flex-1 max-w-full lg:max-w-none space-y-5 md:space-y-8">
+                    <?php if (!empty($homeContents)): ?>
+                        <?php foreach (array_slice($homeContents, 0, 6) as $index => $content): ?>
+                            <?php
+                            $author = trim(($content['auteur_prenom'] ?? '') . ' ' . ($content['auteur_nom'] ?? '')) ?: 'Congo Explorer Hub';
+                            $image = !empty($content['media_url']) ? BASE_URL . ltrim((string)$content['media_url'], '/') : 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=900&h=650&fit=crop';
+                            $publishedAt = !empty($content['date_publication']) ? date('d/m/Y', strtotime((string)$content['date_publication'])) : '';
+                            $body = trim((string)($content['corps_text'] ?? ''));
+                            $excerpt = strlen($body) > 180 ? substr($body, 0, 180) . '...' : $body;
+                            ?>
+                            <article id="contenu-<?php echo htmlspecialchars((string)$content['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" class="post-card bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-sm overflow-hidden animate-card-enter opacity-0">
+                                <div class="flex items-center justify-between p-3.5 md:p-6">
+                                    <div class="flex items-center space-x-2.5 md:space-x-3.5 min-w-0 flex-1">
+                                        <div class="w-9 h-9 md:w-12 md:h-12 rounded-full bg-primary-50 text-primary-700 flex items-center justify-center font-bold ring-2 ring-gold-200 ring-offset-2 ring-offset-white">
+                                            <?php echo htmlspecialchars(strtoupper(substr($author, 0, 1)), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <span class="font-bold text-xs md:text-sm text-primary-900 truncate block"><?php echo htmlspecialchars($author, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                            <div class="flex items-center gap-1 text-[10px] md:text-xs text-gray-400 mt-0.5">
+                                                <i data-lucide="tag" class="w-2.5 h-2.5 md:w-3 md:h-3 flex-shrink-0"></i>
+                                                <span class="truncate"><?php echo htmlspecialchars($content['categorie_nom'] ?? 'Publication', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                                <span class="text-gray-300 flex-shrink-0">-</span>
+                                                <span class="flex-shrink-0"><?php echo htmlspecialchars($publishedAt, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="<?php echo BASE_URL; ?>contenu/detail/<?php echo htmlspecialchars((string)$content['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" class="relative mx-1.5 md:mx-3 rounded-xl md:rounded-2xl overflow-hidden group block">
+                                    <img src="<?php echo htmlspecialchars($image, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" class="img-zoom w-full aspect-[4/3] object-cover" loading="lazy">
+                                </a>
+                                <div class="p-3.5 md:p-6">
+                                    <a href="<?php echo BASE_URL; ?>contenu/detail/<?php echo htmlspecialchars((string)$content['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" class="block">
+                                        <h3 class="font-display text-lg md:text-2xl font-bold text-primary-900 mb-2 hover:text-gold-600 transition-colors"><?php echo htmlspecialchars($content['titre'] ?? '-', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></h3>
+                                    </a>
+                                    <p class="text-xs md:text-[15px] text-gray-700 leading-relaxed mb-4"><?php echo htmlspecialchars($excerpt, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></p>
+                                    <div class="flex items-center justify-between mb-3 md:mb-4">
+                                        <div class="flex items-center gap-3 md:gap-5">
+                                            <form method="POST" action="<?php echo BASE_URL; ?>contenu/like">
+                                                <input type="hidden" name="contenu_id" value="<?php echo htmlspecialchars((string)$content['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                                                <button type="submit" class="like-btn group flex items-center gap-1.5 md:gap-2 text-gray-500 hover:text-red-500 transition-all">
+                                                    <div class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-gray-50 group-hover:bg-red-50 flex items-center justify-center transition-colors"><i data-lucide="heart" class="w-4 h-4 md:w-5 md:h-5"></i></div>
+                                                    <span class="text-xs md:text-sm font-semibold text-gray-600"><?php echo htmlspecialchars((string)($content['likes_count'] ?? 0), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                                </button>
+                                            </form>
+                                            <div class="group flex items-center gap-1.5 md:gap-2 text-gray-500">
+                                                <div class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-gray-50 flex items-center justify-center"><i data-lucide="message-circle" class="w-4 h-4 md:w-5 md:h-5"></i></div>
+                                                <span class="text-xs md:text-sm font-semibold text-gray-600"><?php echo htmlspecialchars((string)($content['commentaires_count'] ?? 0), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                            </div>
+                                            <form method="POST" action="<?php echo BASE_URL; ?>contenu/share" class="flex items-center gap-2">
+                                                <input type="hidden" name="contenu_id" value="<?php echo htmlspecialchars((string)$content['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                                                <input type="hidden" name="plateforme" value="Facebook">
+                                                <button type="submit" class="group flex items-center gap-1.5 md:gap-2 text-gray-500 hover:text-primary-600 transition-all">
+                                                    <div class="w-7 h-7 md:w-9 md:h-9 rounded-full bg-gray-50 group-hover:bg-primary-50 flex items-center justify-center transition-colors"><i data-lucide="share-2" class="w-4 h-4 md:w-5 md:h-5"></i></div>
+                                                    <span class="text-xs md:text-sm font-semibold text-gray-600"><?php echo htmlspecialchars((string)($content['partages_count'] ?? 0), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <form method="POST" action="<?php echo BASE_URL; ?>contenu/favorite">
+                                            <input type="hidden" name="contenu_id" value="<?php echo htmlspecialchars((string)$content['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                                            <button type="submit" class="group w-7 h-7 md:w-9 md:h-9 rounded-full bg-gray-50 hover:bg-gold-50 flex items-center justify-center transition-all" title="Ajouter aux favoris">
+                                                <i data-lucide="bookmark" class="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-gold-500"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <form method="POST" action="<?php echo BASE_URL; ?>contenu/comment" class="flex items-center gap-2 md:gap-3 pt-3 md:pt-4 border-t border-gray-100">
+                                        <input type="hidden" name="contenu_id" value="<?php echo htmlspecialchars((string)$content['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                                        <div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-primary-50 text-primary-700 flex items-center justify-center text-xs font-bold flex-shrink-0">CE</div>
+                                        <input name="commentaire" type="text" placeholder="Commentaire..." class="flex-1 text-xs md:text-sm bg-transparent focus:outline-none placeholder-gray-400 py-1 min-w-0" required>
+                                        <button class="text-gold-500 font-semibold text-xs md:text-sm hover:text-gold-600 transition-colors px-2 md:px-3 py-1 md:py-1.5 rounded-full hover:bg-gold-50 flex-shrink-0">Publier</button>
+                                    </form>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <article class="post-card bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-sm overflow-hidden animate-card-enter opacity-0">
+                            <div class="p-6 md:p-10 text-center">
+                                <div class="mx-auto mb-4 w-12 h-12 rounded-2xl bg-gold-50 text-gold-600 flex items-center justify-center">
+                                    <i data-lucide="newspaper" class="w-6 h-6"></i>
+                                </div>
+                                <h3 class="font-display text-xl md:text-2xl font-bold text-primary-900 mb-2">Aucun contenu dans la base</h3>
+                                <p class="text-sm md:text-base text-gray-500 max-w-md mx-auto">Les publications ajoutees depuis le module Contenu apparaitront ici automatiquement.</p>
+                            </div>
+                        </article>
+                    <?php endif; ?>
+                    <?php if (false): ?>
                     
                     <!-- Post 1 -->
                     <article class="post-card bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-sm overflow-hidden animate-card-enter stagger-1 opacity-0">
@@ -640,6 +740,8 @@
                         </div>
                     </article>
 
+                    <?php endif; ?>
+
                     <!-- Category Carousel -->
                     <div class="bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-sm overflow-hidden p-4 md:p-8 animate-card-enter stagger-4 opacity-0">
                         <div class="flex items-center justify-between mb-4 md:mb-6">
@@ -658,6 +760,26 @@
                                 </button>
                             </div>
                         </div>
+                        <?php if (!empty($homeCategories)): ?>
+                            <div class="grid gap-3 sm:grid-cols-2">
+                                <?php foreach ($homeCategories as $category): ?>
+                                    <div class="rounded-2xl border border-gray-100 bg-gray-50 p-4 transition hover:border-gold-200 hover:bg-gold-50">
+                                        <div class="flex items-center gap-3">
+                                            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-gold-600 shadow-sm">
+                                                <i data-lucide="folder" class="h-5 w-5"></i>
+                                            </span>
+                                            <div class="min-w-0">
+                                                <div class="truncate text-sm font-bold text-primary-900"><?php echo htmlspecialchars($category['nom'] ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+                                                <div class="text-xs text-gray-400">Categorie de la base de donnees</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <p class="rounded-2xl bg-gray-50 p-4 text-sm text-gray-500">Aucune categorie enregistree.</p>
+                        <?php endif; ?>
+                        <?php if (false): ?>
                         <div class="flex gap-1.5 md:gap-2 mb-4 md:mb-5 overflow-x-auto hide-scrollbar pb-1">
                             <button onclick="switchCategory('sport')" class="category-btn whitespace-nowrap px-3 py-2 md:px-4 md:py-2.5 rounded-full text-xs md:text-sm font-bold bg-gold-500 text-primary-900 shadow-lg shadow-gold-500/20 transition-all flex items-center gap-1.5 md:gap-2">
                                 <span>🏅</span> Sport
@@ -680,6 +802,7 @@
                                 <div id="carouselTrack" class="flex transition-transform duration-500 ease-out gap-3 md:gap-4"></div>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </main>
 
@@ -1091,14 +1214,71 @@
                     <a href="#" class="hover:text-gold-400 transition-colors">Mentions légales</a>
                 </div>
                 <p class="text-white/25 text-xs md:text-sm flex items-center gap-1.5">
-                    Fait avec <span class="text-red-400">❤️</span> au Congo
+                    Fait par <span class="text-gold-400"><a href="https://wa.me/+243997019883" target="_blank">Lad_77</a></span> avec <span class="text-red-400">❤️</span> Chez Evotech Africa
                 </p>
             </div>
         </div>
     </footer>
 
     <script>
-        lucide.createIcons();
+        const iconPaths = {
+            search: '<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>',
+            bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+            'arrow-up-right': '<path d="M7 17L17 7"/><path d="M7 7h10v10"/>',
+            menu: '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>',
+            x: '<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',
+            'arrow-right': '<path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>',
+            'play-circle': '<circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/>',
+            play: '<path d="M8 5v14l11-7z"/>',
+            tag: '<path d="M20.6 13.1l-7.5 7.5a2 2 0 0 1-2.8 0L3 13.3V3h10.3l7.3 7.3a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r=".5"/>',
+            heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
+            'message-circle': '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.5 8.5 8.5 0 0 1-4.1-1.1L3 20l1.1-4.5A8.5 8.5 0 1 1 21 11.5z"/>',
+            'share-2': '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4"/><path d="M15.4 6.5l-6.8 4"/>',
+            bookmark: '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
+            newspaper: '<path d="M4 19a2 2 0 0 0 2 2h14"/><path d="M6 17V3H4a2 2 0 0 0-2 2v14"/><path d="M8 5h10v12H8z"/><path d="M10 9h6"/><path d="M10 13h6"/>',
+            check: '<path d="M20 6L9 17l-5-5"/>',
+            'check-circle': '<circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/>',
+            'map-pin': '<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
+            'more-horizontal': '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+            grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+            'chevron-left': '<path d="M15 18l-6-6 6-6"/>',
+            'chevron-right': '<path d="M9 18l6-6-6-6"/>',
+            folder: '<path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+            users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+            'file-text': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>',
+            'trending-up': '<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>',
+            sparkles: '<path d="M12 3l1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7z"/><path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/>',
+            camera: '<path d="M14.5 4l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l1.5-2z"/><circle cx="12" cy="13" r="4"/>',
+            megaphone: '<path d="M3 11v2a2 2 0 0 0 2 2h2l4 5V4L7 9H5a2 2 0 0 0-2 2z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M19 5a9 9 0 0 1 0 14"/>',
+            'calendar-star': '<path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M12 14l.8 1.7 1.8.2-1.3 1.3.3 1.8-1.6-.9-1.6.9.3-1.8-1.3-1.3 1.8-.2z"/>',
+            lightbulb: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12c.7.6 1 1.5 1 2h6c0-.5.3-1.4 1-2a7 7 0 0 0-4-12z"/>',
+            link: '<path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1"/>',
+            rocket: '<path d="M4.5 16.5c-1 1-1.5 3-1.5 3s2-.5 3-1.5"/><path d="M9 15l-2-2a12 12 0 0 1 8-10l4-1-1 4a12 12 0 0 1-10 8z"/><path d="M15 9h.01"/>',
+            globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/>',
+            quote: '<path d="M3 21c3-2 4-5 4-8V5H3v8h4"/><path d="M14 21c3-2 4-5 4-8V5h-4v8h4"/>',
+            mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+            download: '<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/>',
+            instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5"/>',
+            twitter: '<path d="M4 4l16 16"/><path d="M20 4L4 20"/>',
+            facebook: '<path d="M14 8h3V4h-3a5 5 0 0 0-5 5v3H6v4h3v6h4v-6h3l1-4h-4V9a1 1 0 0 1 1-1z"/>',
+            youtube: '<path d="M22 12s0-3-1-4-4-1-9-1-8 0-9 1-1 4-1 4 0 3 1 4 4 1 9 1 8 0 9-1 1-4 1-4z"/><path d="M10 9l5 3-5 3z"/>',
+            linkedin: '<path d="M6 9H3v12h3z"/><circle cx="4.5" cy="4.5" r="1.5"/><path d="M10 9h3v2a4 4 0 0 1 7 3v7h-3v-6a2 2 0 0 0-4 0v6h-3z"/>',
+            phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.7 2.6a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6.3 6.3l1.3-1.3a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.7 2z"/>',
+            send: '<path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>'
+        };
+
+        function fallbackIcon(name) {
+            const path = iconPaths[name] || '<circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/>';
+            return `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+        }
+
+        function renderIcons() {
+            document.querySelectorAll('i[data-lucide]').forEach((icon) => {
+                icon.innerHTML = fallbackIcon(icon.dataset.lucide);
+            });
+        }
+
+        renderIcons();
 
         // ===== CATEGORY CAROUSEL =====
         const categoryData = {
@@ -1143,6 +1323,7 @@
 
         function renderCarousel(cat) {
             const track = document.getElementById('carouselTrack');
+            if (!track || !categoryData[cat]) return;
             const items = categoryData[cat];
             const cfg = getSlideConfig();
             track.innerHTML = items.map(item => `
@@ -1162,6 +1343,7 @@
 
         function updateCarouselPosition() {
             const track = document.getElementById('carouselTrack');
+            if (!track) return;
             const cfg = getSlideConfig();
             track.style.transform = `translateX(${-currentSlide * (cfg.slideWidth + cfg.gap)}px)`;
         }
@@ -1199,11 +1381,13 @@
         // Touch swipe
         let touchStartX = 0;
         const carouselTrack = document.getElementById('carouselTrack');
-        carouselTrack.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-        carouselTrack.addEventListener('touchend', e => {
-            const diff = touchStartX - e.changedTouches[0].screenX;
-            if (Math.abs(diff) > 40) moveCarousel(diff > 0 ? 1 : -1);
-        }, {passive: true});
+        if (carouselTrack) {
+            carouselTrack.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+            carouselTrack.addEventListener('touchend', e => {
+                const diff = touchStartX - e.changedTouches[0].screenX;
+                if (Math.abs(diff) > 40) moveCarousel(diff > 0 ? 1 : -1);
+            }, {passive: true});
+        }
 
         // ===== LIKE BUTTON =====
         function toggleLike(btn) {
@@ -1234,7 +1418,7 @@
             const icon = document.getElementById('mobile-menu-icon');
             menu.classList.toggle('hidden');
             icon.setAttribute('data-lucide', menu.classList.contains('hidden') ? 'menu' : 'x');
-            lucide.createIcons();
+            renderIcons();
         }
 
         // ===== SEARCH =====

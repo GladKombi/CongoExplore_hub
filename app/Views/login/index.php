@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -247,8 +247,10 @@
         <div class="relative z-10 w-full max-w-md mx-auto px-4">
 
             <!-- Card -->
-            <div class="bg-white rounded-[2.5rem] shadow-2xl shadow-primary-900/5 p-8 md:p-10 border border-gray-100 animate-scale-in">
-
+                <div class="bg-white rounded-[2.5rem] shadow-2xl shadow-primary-900/5 p-8 md:p-10 border border-gray-100 animate-scale-in relative">
+                    <a href="<?php echo BASE_URL; ?>home" aria-label="Retour Ã  l'accueil" class="absolute top-5 right-5 w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors flex items-center justify-center shadow-sm">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </a>
                 <!-- Logo -->
                 <div class="flex items-center justify-center space-x-3 mb-8">
                     <div class="w-11 h-11 rounded-2xl bg-primary-900 flex items-center justify-center overflow-hidden shadow-lg shadow-primary-900/20">
@@ -262,7 +264,7 @@
                 <!-- Error message -->
                 <?php if (!empty($error)): ?>
                     <div class="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                        <?php echo htmlspecialchars($error); ?>
+                        <?php echo htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </div>
                 <?php endif; ?>
 
@@ -284,7 +286,7 @@
                         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mot de passe</label>
                         <div class="relative">
                             <i data-lucide="lock" class="input-icon absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 transition-colors"></i>
-                            <input type="password" name="password" placeholder="••••••••" required id="password-input"
+                            <input type="password" name="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required id="password-input"
                                 class="input-field w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all">
                             <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
                                 <i data-lucide="eye" class="w-4 h-4" id="password-icon"></i>
@@ -299,7 +301,7 @@
                             <span class="text-xs text-gray-500 group-hover:text-gray-700 transition-colors">Se souvenir de moi</span>
                         </label>
                         <a href="#" class="text-xs font-semibold text-gold-600 hover:text-gold-700 transition-colors">
-                            Mot de passe oublié ?
+                            Mot de passe oubliÃ© ?
                         </a>
                     </div> -->
 
@@ -324,7 +326,7 @@
         <!-- Toast notification -->
         <div id="toast" class="hidden fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl text-sm font-medium animate-slide-right bg-primary-900 text-white">
             <i data-lucide="check-circle" class="w-5 h-5 text-gold-400"></i>
-            <span id="toast-message">Connexion réussie !</span>
+            <span id="toast-message">Connexion rÃ©ussie !</span>
         </div>
     </div>
 
@@ -349,9 +351,9 @@
         function handleLogin(e) {
             e.preventDefault();
             const email = e.target.querySelector('input[type="email"]').value;
-            showToast('Connexion réussie ! Bienvenue sur Congo Explorer Hub.');
+            showToast('Connexion rÃ©ussie ! Bienvenue sur Congo Explorer Hub.');
 
-            // Simulation de redirection après connexion
+            // Simulation de redirection aprÃ¨s connexion
             setTimeout(() => {
                 window.location.href = 'index.html#feed';
             }, 1500);

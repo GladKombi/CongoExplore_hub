@@ -10,4 +10,70 @@ class Utilisateur extends Model
         $stmt->execute(['email' => $email]);
         return $stmt->fetch() ?: null;
     }
+
+    public function emailExists(string $email, ?int $excludeId = null): bool
+    {
+        $sql = 'SELECT COUNT(*) FROM utilisateurs WHERE email = :email AND supprimer = 0';
+        $params = ['email' => $email];
+
+        if ($excludeId !== null) {
+            $sql .= ' AND id != :id';
+            $params['id'] = $excludeId;
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return (int)$stmt->fetchColumn() > 0;
+    }
+
+    public function createUser(array $data): bool
+    {
+        $stmt = $this->db->prepare(
+            'INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, role)
+             VALUES (:nom, :prenom, :email, :mot_de_passe, :role)'
+        );
+
+        return $stmt->execute([
+            'nom' => $data['nom'],
+            'prenom' => $data['prenom'],
+            'email' => $data['email'],
+            'mot_de_passe' => $data['mot_de_passe'],
+            'role' => $data['role'],
+        ]);
+    }
+
+    public function updateUser(int $id, array $data): bool
+    {
+        $fields = [
+            'nom = :nom',
+            'prenom = :prenom',
+            'email = :email',
+            'role = :role',
+        ];
+
+        $params = [
+            'id' => $id,
+            'nom' => $data['nom'],
+            'prenom' => $data['prenom'],
+            'email' => $data['email'],
+            'role' => $data['role'],
+        ];
+
+        if (!empty($data['mot_de_passe'])) {
+            $fields[] = 'mot_de_passe = :mot_de_passe';
+            $params['mot_de_passe'] = $data['mot_de_passe'];
+        }
+
+        $sql = 'UPDATE utilisateurs SET ' . implode(', ', $fields) . ' WHERE id = :id AND supprimer = 0';
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute($params);
+    }
+
+    public function softDelete(int $id): bool
+    {
+        $stmt = $this->db->prepare('UPDATE utilisateurs SET supprimer = 1 WHERE id = :id AND supprimer = 0');
+        return $stmt->execute(['id' => $id]);
+    }
 }
