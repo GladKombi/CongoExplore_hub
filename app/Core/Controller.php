@@ -48,6 +48,7 @@ class Controller
             'prenom' => $user['prenom'],
             'email' => $user['email'],
             'role' => $user['role'],
+            'photo_profil' => $user['photo_profil'] ?? null,
         ];
     }
 

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../Models/Utilisateur.php';
+require_once __DIR__ . '/../Models/ProfilUtilisateur.php';
 
 class UtilisateurController extends Controller
 {
@@ -9,7 +10,7 @@ class UtilisateurController extends Controller
     {
         $this->requireRole(['Admin']);
         $model = new Utilisateur();
-        $utilisateurs = $model->findAll();
+        $utilisateurs = $model->findAllWithProfiles();
         $this->view('utilisateurs/index', ['title' => 'Utilisateurs', 'utilisateurs' => $utilisateurs]);
     }
 
@@ -17,7 +18,7 @@ class UtilisateurController extends Controller
     {
         $this->requireRole(['Admin']);
         $model = new Utilisateur();
-        $utilisateur = $model->findById($id);
+        $utilisateur = $model->findByIdWithProfile($id);
         $this->view('utilisateurs/show', ['title' => 'Utilisateur', 'utilisateur' => $utilisateur]);
     }
 
@@ -39,9 +40,27 @@ class UtilisateurController extends Controller
 
         $data['mot_de_passe'] = password_hash($data['mot_de_passe'], PASSWORD_DEFAULT);
 
-        if ($model->createUser($data)) {
+        $photo = $this->uploadProfilePhoto();
+        if ($photo === false) {
+            $this->redirect('utilisateur');
+        }
+
+        $userId = $model->createUser($data);
+        if ($userId !== false) {
+            if (is_string($photo)) {
+                $profileModel = new ProfilUtilisateur();
+                $fullName = trim($data['prenom'] . ' ' . $data['nom']);
+                if (!$profileModel->savePhoto($userId, $fullName, $photo)) {
+                    $this->removeUploadedPhoto($photo);
+                    $this->flash('error', 'Le compte a ete cree, mais la photo n’a pas pu etre enregistree.');
+                    $this->redirect('utilisateur');
+                }
+            }
             $this->flash('success', 'Utilisateur cree avec succes.');
         } else {
+            if (is_string($photo)) {
+                $this->removeUploadedPhoto($photo);
+            }
             $this->flash('error', 'Impossible de creer cet utilisateur.');
         }
 
@@ -79,7 +98,28 @@ class UtilisateurController extends Controller
             $data['mot_de_passe'] = password_hash($data['mot_de_passe'], PASSWORD_DEFAULT);
         }
 
+        $photo = $this->uploadProfilePhoto();
+        if ($photo === false) {
+            $this->redirect('utilisateur');
+        }
+
         if ($model->updateUser($id, $data)) {
+            if (is_string($photo)) {
+                $profileModel = new ProfilUtilisateur();
+                $oldProfile = $profileModel->findByUtilisateurId($id);
+                $fullName = trim($data['prenom'] . ' ' . $data['nom']);
+
+                if (!$profileModel->savePhoto($id, $fullName, $photo)) {
+                    $this->removeUploadedPhoto($photo);
+                    $this->flash('error', 'Le compte a ete modifie, mais la photo n’a pas pu etre enregistree.');
+                    $this->redirect('utilisateur');
+                }
+
+                $this->removeUploadedPhoto($oldProfile['photo_profil'] ?? null);
+                if ((int)($_SESSION['user']['id'] ?? 0) === $id) {
+                    $_SESSION['user']['photo_profil'] = $photo;
+                }
+            }
             $this->flash('success', 'Utilisateur mis a jour avec succes.');
         } else {
             $this->flash('error', 'Impossible de mettre a jour cet utilisateur.');
@@ -174,6 +214,52 @@ class UtilisateurController extends Controller
         }
 
         return $nomSlug . '-' . $prenomSlug . '@congoexplorerhub.com';
+    }
+
+    private function uploadProfilePhoto(): string|false|null
+    {
+        $file = $_FILES['photo_profil'] ?? null;
+        if (!$file || (int)($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            return null;
+        }
+
+        if ((int)$file['error'] !== UPLOAD_ERR_OK || (int)$file['size'] > 1024 * 1024) {
+            $this->flash('error', 'La photo est invalide ou depasse la taille maximale de 1 Mo.');
+            return false;
+        }
+
+        $mime = (new finfo(FILEINFO_MIME_TYPE))->file((string)$file['tmp_name']);
+        $extensions = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+        if (!isset($extensions[$mime])) {
+            $this->flash('error', 'Format non accepte. Utilisez une image JPEG, PNG ou WebP.');
+            return false;
+        }
+
+        $directory = dirname(__DIR__, 2) . '/uploads/profils';
+        if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+            $this->flash('error', 'Impossible de preparer le dossier des photos.');
+            return false;
+        }
+
+        $fileName = bin2hex(random_bytes(16)) . '.' . $extensions[$mime];
+        if (!move_uploaded_file((string)$file['tmp_name'], $directory . '/' . $fileName)) {
+            $this->flash('error', 'Le televersement de la photo a echoue.');
+            return false;
+        }
+
+        return 'uploads/profils/' . $fileName;
+    }
+
+    private function removeUploadedPhoto(?string $path): void
+    {
+        if (!$path || !str_starts_with($path, 'uploads/profils/')) {
+            return;
+        }
+
+        $absolutePath = dirname(__DIR__, 2) . '/' . $path;
+        if (is_file($absolutePath)) {
+            unlink($absolutePath);
+        }
     }
 
     private function slugForEmail(string $value): string

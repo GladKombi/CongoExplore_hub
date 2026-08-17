@@ -286,7 +286,7 @@
                         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Mot de passe</label>
                         <div class="relative">
                             <i data-lucide="lock" class="input-icon absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 transition-colors"></i>
-                            <input type="password" name="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required id="password-input"
+                            <input type="password" name="password" placeholder=".........." required id="password-input"
                                 class="input-field w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all">
                             <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100">
                                 <i data-lucide="eye" class="w-4 h-4" id="password-icon"></i>

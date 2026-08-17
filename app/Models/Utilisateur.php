@@ -6,8 +6,35 @@ class Utilisateur extends Model
 
     public function findByEmail(string $email): ?array
     {
-        $stmt = $this->db->prepare('SELECT * FROM utilisateurs WHERE email = :email AND supprimer = 0');
+        $stmt = $this->db->prepare(
+            'SELECT u.*, p.photo_profil
+             FROM utilisateurs u
+             LEFT JOIN profils_utilisateurs p ON p.utilisateur_id = u.id
+             WHERE u.email = :email AND u.supprimer = 0'
+        );
         $stmt->execute(['email' => $email]);
+        return $stmt->fetch() ?: null;
+    }
+
+    public function findAllWithProfiles(): array
+    {
+        $sql = 'SELECT u.*, p.photo_profil
+                FROM utilisateurs u
+                LEFT JOIN profils_utilisateurs p ON p.utilisateur_id = u.id
+                WHERE u.supprimer = 0
+                ORDER BY u.date_creation DESC';
+        return $this->db->query($sql)->fetchAll();
+    }
+
+    public function findByIdWithProfile(int $id): ?array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT u.*, p.photo_profil, p.biographie, p.secteur, p.liens_reseaux
+             FROM utilisateurs u
+             LEFT JOIN profils_utilisateurs p ON p.utilisateur_id = u.id
+             WHERE u.id = :id AND u.supprimer = 0'
+        );
+        $stmt->execute(['id' => $id]);
         return $stmt->fetch() ?: null;
     }
 
@@ -27,20 +54,22 @@ class Utilisateur extends Model
         return (int)$stmt->fetchColumn() > 0;
     }
 
-    public function createUser(array $data): bool
+    public function createUser(array $data): int|false
     {
         $stmt = $this->db->prepare(
             'INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, role)
              VALUES (:nom, :prenom, :email, :mot_de_passe, :role)'
         );
 
-        return $stmt->execute([
+        $created = $stmt->execute([
             'nom' => $data['nom'],
             'prenom' => $data['prenom'],
             'email' => $data['email'],
             'mot_de_passe' => $data['mot_de_passe'],
             'role' => $data['role'],
         ]);
+
+        return $created ? (int)$this->db->lastInsertId() : false;
     }
 
     public function updateUser(int $id, array $data): bool

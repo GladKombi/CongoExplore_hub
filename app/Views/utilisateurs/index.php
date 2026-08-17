@@ -123,13 +123,16 @@ $latestUsers = array_slice($latestUsers, 0, 3);
                                 $role = $u['role'] ?? 'Journaliste';
                                 $searchData = strtolower(trim($fullName . ' ' . ($u['email'] ?? '') . ' ' . $role));
                                 $createdAt = !empty($u['date_creation']) ? date('d/m/Y', strtotime((string)$u['date_creation'])) : '-';
+                                $photoUrl = !empty($u['photo_profil']) ? BASE_URL . ltrim($u['photo_profil'], '/') : null;
                                 ?>
                                 <tr class="hover:bg-gray-50/80 transition" data-search="<?php echo htmlspecialchars($searchData, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                                     <td class="px-5 py-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-11 h-11 rounded-2xl bg-primary-50 text-primary-700 flex items-center justify-center font-bold uppercase">
-                                                <?php echo htmlspecialchars($initials, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                            </div>
+                                            <?php if ($photoUrl): ?>
+                                                <img src="<?php echo htmlspecialchars($photoUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" alt="Photo de <?php echo htmlspecialchars($fullName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" class="h-11 w-11 rounded-2xl object-cover" loading="lazy">
+                                            <?php else: ?>
+                                                <div class="w-11 h-11 rounded-2xl bg-primary-50 text-primary-700 flex items-center justify-center font-bold uppercase"><?php echo htmlspecialchars($initials, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+                                            <?php endif; ?>
                                             <div>
                                                 <div class="font-semibold text-primary-900"><?php echo htmlspecialchars($fullName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
                                                 <div class="text-xs text-gray-400">ID #<?php echo htmlspecialchars((string)($u['id'] ?? ''), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
@@ -253,7 +256,7 @@ $latestUsers = array_slice($latestUsers, 0, 3);
                 </button>
             </div>
 
-            <form id="user-form" class="space-y-4" method="POST" action="<?php echo BASE_URL; ?>utilisateur/create">
+            <form id="user-form" class="space-y-4" method="POST" enctype="multipart/form-data" action="<?php echo BASE_URL; ?>utilisateur/create">
                 <input type="hidden" id="user-id" name="id">
                 <div class="grid gap-4 sm:grid-cols-2">
                     <label class="block">
@@ -272,6 +275,11 @@ $latestUsers = array_slice($latestUsers, 0, 3);
                             <option value="<?php echo htmlspecialchars($role, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"><?php echo htmlspecialchars($role, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
                     </select>
+                </label>
+                <label class="block">
+                    <span class="text-sm font-semibold text-gray-700">Photo de profil</span>
+                    <input id="user-photo" name="photo_profil" type="file" accept="image/jpeg,image/png,image/webp" class="form-input mt-2 block w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm outline-none">
+                    <span class="mt-2 block text-xs text-gray-400">JPEG, PNG ou WebP, 1 Mo maximum.</span>
                 </label>
                 <label class="block">
                     <span class="text-sm font-semibold text-gray-700">Mot de passe</span>

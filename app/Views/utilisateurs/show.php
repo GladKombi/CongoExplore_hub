@@ -50,15 +50,18 @@ $roleMeta = [
         ];
         $createdAt = !empty($utilisateur['date_creation']) ? date('d/m/Y a H:i', strtotime((string)$utilisateur['date_creation'])) : '-';
         $isDeleted = !empty($utilisateur['supprimer']);
+        $photoUrl = !empty($utilisateur['photo_profil']) ? BASE_URL . ltrim($utilisateur['photo_profil'], '/') : null;
         ?>
 
         <div class="grid gap-6 xl:grid-cols-[380px_minmax(0,1fr)]">
             <aside class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
                 <div class="flex flex-col items-center text-center">
                     <div class="relative">
-                        <div class="flex h-28 w-28 items-center justify-center rounded-[2rem] bg-primary-50 text-4xl font-bold uppercase text-primary-800">
-                            <?php echo htmlspecialchars($initials, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                        </div>
+                        <?php if ($photoUrl): ?>
+                            <img src="<?php echo htmlspecialchars($photoUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" alt="Photo de <?php echo htmlspecialchars($fullName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" class="h-28 w-28 rounded-[2rem] object-cover">
+                        <?php else: ?>
+                            <div class="flex h-28 w-28 items-center justify-center rounded-[2rem] bg-primary-50 text-4xl font-bold uppercase text-primary-800"><?php echo htmlspecialchars($initials, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+                        <?php endif; ?>
                         <span class="absolute -bottom-2 -right-2 flex h-11 w-11 items-center justify-center rounded-2xl border-4 border-white <?php echo htmlspecialchars($meta['badge'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                             <i data-lucide="<?php echo htmlspecialchars($meta['icon'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" class="w-5 h-5"></i>
                         </span>

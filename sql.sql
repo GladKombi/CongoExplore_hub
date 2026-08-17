@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS profils_utilisateurs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     utilisateur_id INT UNIQUE NOT NULL,
     nom_complet VARCHAR(150) NOT NULL,
+    photo_profil VARCHAR(255) NULL,
     biographie TEXT,
     secteur ENUM('Art', 'Tech', 'Entrepreneuriat', 'Culture', 'Autre') NOT NULL,
     liens_reseaux JSON NULL, -- Permet de stocker les liens (LinkedIn, Instagram, etc.) de manière flexible

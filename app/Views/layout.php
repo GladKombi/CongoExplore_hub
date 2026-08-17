@@ -315,6 +315,7 @@
 $user = $_SESSION['user'] ?? null;
 $role = $user['role'] ?? '';
 $fullName = trim(($user['prenom'] ?? '') . ' ' . ($user['nom'] ?? '')) ?: 'Utilisateur';
+$profilePhotoUrl = !empty($user['photo_profil']) ? BASE_URL . ltrim($user['photo_profil'], '/') : null;
 
 $menuItems = [
     ['label' => 'Tableau de bord', 'icon' => 'layout-dashboard', 'url' => 'dashboard', 'roles' => ['Admin', 'Journaliste', 'Community Manager']],
@@ -388,9 +389,11 @@ $currentSegment = explode('/', $currentPath)[0] ?? '';
 
         <div class="border-t border-gray-100 p-4">
             <div class="flex items-center gap-3 p-3 rounded-2xl bg-gray-50">
-                <div class="w-11 h-11 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-700 font-bold uppercase">
-                    <?php echo htmlspecialchars(substr($user['prenom'] ?? 'U', 0, 1) . substr($user['nom'] ?? '', 0, 1), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                </div>
+                <?php if ($profilePhotoUrl): ?>
+                    <img src="<?php echo htmlspecialchars($profilePhotoUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" alt="Photo de profil" class="h-11 w-11 rounded-2xl object-cover">
+                <?php else: ?>
+                    <div class="w-11 h-11 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-700 font-bold uppercase"><?php echo htmlspecialchars(substr($user['prenom'] ?? 'U', 0, 1) . substr($user['nom'] ?? '', 0, 1), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+                <?php endif; ?>
                 <div class="sidebar-text min-w-0">
                     <div class="text-sm font-semibold text-gray-800 truncate"><?php echo htmlspecialchars($fullName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
                     <div class="text-xs text-gray-500 truncate"><?php echo htmlspecialchars($role ?: 'Visiteur', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
@@ -433,9 +436,11 @@ $currentSegment = explode('/', $currentPath)[0] ?? '';
             </button>
             <div class="flex items-center gap-2 pl-2 border-l border-gray-200 ml-1">
                 <span class="hidden sm:inline text-sm text-gray-600"><?php echo htmlspecialchars($fullName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
-                <div class="w-9 h-9 rounded-full bg-primary-50 text-primary-700 flex items-center justify-center font-semibold uppercase">
-                    <?php echo htmlspecialchars(substr($user['prenom'] ?? 'U', 0, 1) . substr($user['nom'] ?? '', 0, 1), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                </div>
+                <?php if ($profilePhotoUrl): ?>
+                    <img src="<?php echo htmlspecialchars($profilePhotoUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>" alt="Photo de profil" class="h-9 w-9 rounded-full object-cover">
+                <?php else: ?>
+                    <div class="w-9 h-9 rounded-full bg-primary-50 text-primary-700 flex items-center justify-center font-semibold uppercase"><?php echo htmlspecialchars(substr($user['prenom'] ?? 'U', 0, 1) . substr($user['nom'] ?? '', 0, 1), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
